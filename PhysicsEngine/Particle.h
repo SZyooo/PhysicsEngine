@@ -10,7 +10,7 @@ namespace YoungEngine {
 		/// </summary>
 		Vector3 acceleration;
 		Vector3 forceAccum;
-		float dampling;
+		float damping;
 		float inverseMass;
 	public:
 		void setPosition(const Vector3& pos);

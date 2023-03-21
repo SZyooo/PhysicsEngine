@@ -17,7 +17,7 @@ void YoungEngine::Particle::integrate(float duration)
 	Vector3 resultingAcc = acceleration;
 	resultingAcc.addScaledVector(forceAccum, inverseMass);
 	velocity.addScaledVector(resultingAcc, duration);
-	velocity *= pow(dampling, duration);
+	velocity *= pow(damping, duration);
 	clearAccumulator();
 }
 
@@ -62,12 +62,12 @@ YoungEngine::Vector3 YoungEngine::Particle::getAcceleration() const
 
 void YoungEngine::Particle::setDamping(float d)
 {
-	dampling = d;
+	damping = d;
 }
 
 float YoungEngine::Particle::getDampling()const
 {
-	return dampling;
+	return damping;
 }
 
 void YoungEngine::Particle::setMass(float m)

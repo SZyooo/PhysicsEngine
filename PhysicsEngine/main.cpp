@@ -6,6 +6,7 @@
 #include"ParticleWrapper.h"
 #include"ParticleAnchoredSpring.h"
 #include"ParticleGravity.h"
+#include"Debug.h"
 #pragma comment(lib,"mylib.lib")
 
 #define WIN_WID 800
@@ -26,18 +27,20 @@ int main() {
 	};
 	auto window = initGL(WIN_WID,WIN_HEI);
 	
-	Camera camera(1, 1, WIN_WID, WIN_HEI);
+	Camera camera(2, 2, WIN_WID, WIN_HEI, 0, -90, {0,0,10});
 	CameraControllor cc;
 	cc.SetUpCamera(&camera);
 	cc.SetUpCentre(WIN_WID / 2, WIN_HEI / 2);
 	glfwSetKeyCallback(window, CameraControllor::KeyInputCallback);
 	glfwSetCursorPosCallback(window, CameraControllor::MouseMoveCallback);
 
+	GLuint defaultVao;
+	glCreateVertexArrays(1, &defaultVao);
 
-	YoungEngine::ParticleWrapper cube(new YoungEngine::Cube(glm::translate(glm::scale(glm::mat4(1), glm::vec3(0.2)), glm::vec3(0, 0, -5)), 1, 1, 1));
-	cube.setMass(100);
-	cube.setDamping(0.001);
-	
+	glm::mat4 model = glm::scale(glm::mat4(1), vec3(0.1));
+	YoungEngine::ParticleWrapper cube(new YoungEngine::Cube(model, 1, 1, 1));
+	cube.setMass(10);
+	cube.setDamping(0.9);
 
 	GLuint drawcube = create_program("cube_vs.glsl", "cube_fs.glsl",0,0,"cube_gs.glsl");
 	GLuint cubeBuffer = YoungEngine::moveVertexToBuffer(cube.getVertices());
@@ -47,14 +50,23 @@ int main() {
 	glUniformMatrix4fv(glGetUniformLocation(drawcube, "project"), 1, GL_FALSE, glm::value_ptr(camera.GetProjectMat()));
 	glUniformMatrix4fv(glGetUniformLocation(drawcube, "proj_inv"), 1, GL_FALSE, glm::value_ptr(glm::inverse(camera.GetProjectMat())));
 	glUniformMatrix4fv(glGetUniformLocation(drawcube, "model"), 1, GL_FALSE, glm::value_ptr(cube.getTransform()));
+	
 
-	YoungEngine::ParticleAnchoredSpring anchoredSpring({ 0,0,0 }, 0.1, 0.5);
-	YoungEngine::ParticleGravity gravity({ 0,-9.8,0 });
+	YoungEngine::ParticleAnchoredSpring anchoredSpring({ 0,0,0 }, 100, 0.1);
+	YoungEngine::ParticleGravity gravity({ 0,-10,0 });
 
+	GLuint drawSpring = create_program("line_vs.glsl", "line_fs.glsl");
+	glm::vec3 anchorPos = YoungEngine::convertVector3ToGLMVec3(anchoredSpring.getAnchorPosition());
+	glUseProgram(drawSpring);
+	glUniform3fv(glGetUniformLocation(drawSpring, "pos[0]"), 1, glm::value_ptr(anchorPos));
+	glUniformMatrix4fv(glGetUniformLocation(drawSpring, "proj"), 1, GL_FALSE, glm::value_ptr(camera.GetProjectMat()));
+	
 	double time = glfwGetTime();
 	glEnable(GL_DEPTH_TEST);
 	while (glfwWindowShouldClose(window) == false)
 	{
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		
 		double t = glfwGetTime();
 		double dt = t - time;
 		cc.SetUpDeltaTime(dt);
@@ -62,10 +74,18 @@ int main() {
 		anchoredSpring.updateForce(cube, dt);
 		gravity.updateForce(cube, dt);
 		cube.integrate(dt);
+		YoungEngine::PrintVector(cube.getVelocity(),"velocity");
+		glUseProgram(drawcube);
+		glBindVertexArray(cubeVao);
 		glUniformMatrix4fv(glGetUniformLocation(drawcube, "view"), 1, GL_FALSE, glm::value_ptr(camera.GetViewMat()));
 		glUniformMatrix4fv(glGetUniformLocation(drawcube, "model"), 1, GL_FALSE, glm::value_ptr(cube.getTransform()));
-		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, &cube.trianglatedIndices()[0]);
+		glUseProgram(drawSpring);
+		glBindVertexArray(defaultVao);
+		glm::vec3 particle_pos = YoungEngine::convertVector3ToGLMVec3(cube.getPosition());
+		glUniform3fv(glGetUniformLocation(drawSpring, "pos[1]"), 1, glm::value_ptr(particle_pos));
+		glUniformMatrix4fv(glGetUniformLocation(drawSpring, "view"), 1, GL_FALSE, glm::value_ptr(camera.GetViewMat()));
+		glDrawArrays(GL_LINES, 0, 2);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}

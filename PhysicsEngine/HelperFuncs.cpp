@@ -20,3 +20,8 @@ unsigned int YoungEngine::generateVAOForCubeShader(unsigned int bufferid)
     return vao;
 }
 
+glm::vec3 YoungEngine::convertVector3ToGLMVec3(const Vector3& v)
+{
+    return glm::vec3(v.x,v.y,v.z);
+}
+

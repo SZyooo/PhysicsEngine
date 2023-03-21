@@ -11,5 +11,6 @@ namespace YoungEngine
 	public:
 		ParticleAnchoredSpring(const Vector3& anchor_pos, float spring_constant, float rest_len);
 		virtual void updateForce(Particle& p, float duration);
+		const Vector3& getAnchorPosition()const;
 	};
 }

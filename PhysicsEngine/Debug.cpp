@@ -14,10 +14,10 @@ void YoungEngine::PrintInfo(std::string& s)
 #endif // DEBUGGING
 }
 
-void YoungEngine::PrintVector(const YoungEngine::Vector3& v)
+void YoungEngine::PrintVector(const YoungEngine::Vector3& v, const std::string& name)
 {
 #ifdef CONSOLE_OUTPUT
-	std::cout << "[" << v.x << "," << v.y << "," << v.z << "]" << std::endl;
+	std::cout << name << "=[" << v.x << "," << v.y << "," << v.z << "]" << std::endl;
 #else
 
 #endif // CONSOLE_OUTPUT

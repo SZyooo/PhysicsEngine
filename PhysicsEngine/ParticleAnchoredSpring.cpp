@@ -13,3 +13,8 @@ void YoungEngine::ParticleAnchoredSpring::updateForce(Particle& p, float duratio
 	Vector3 force = -springConstant * abs(dis.magnitude() - restLength) * dir;
 	p.addForce(force);
 }
+
+const YoungEngine::Vector3& YoungEngine::ParticleAnchoredSpring::getAnchorPosition() const
+{
+	return anchorPos;
+}

@@ -135,5 +135,11 @@
     <None Include="cube_gs.glsl">
       <Filter>资源文件</Filter>
     </None>
+    <None Include="line_vs.glsl">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="line_fs.glsl">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
 </Project>
