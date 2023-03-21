@@ -8,6 +8,10 @@ std::vector<unsigned int>& YoungEngine::Shape::getIndicesData()
 {
 	return indices;
 }
+glm::mat4& YoungEngine::Shape::getTransformData()
+{
+	return model;
+}
 YoungEngine::Shape::Shape(const glm::mat4& m)
 	:model(m)
 {

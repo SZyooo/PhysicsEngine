@@ -7,22 +7,24 @@ YoungEngine::ParticleWrapper::ParticleWrapper(Shape* pshape)
 	{
 		shape = new Shape;
 	}
+	glm::vec4 pos = shape->getTransform()[3];
+	position = Vector3(pos.x, pos.y, pos.z);
 }
 
 void YoungEngine::ParticleWrapper::move(const glm::vec3& translate)
 {
-	position += YoungEngine::Vector3(translate.x, translate.y, translate.z);
+	shape->move(translate);
 }
 
 const glm::mat4& YoungEngine::ParticleWrapper::getTransform() const
 {
-	glm::vec3 pos = glm::vec3(position.x, position.y, position.z);
-	return glm::translate(shape->getTransform(), pos);
+	YoungEngine::ParticleWrapper* _this = const_cast<YoungEngine::ParticleWrapper*>(this);
+	_this->getTransformData() = glm::translate(shape->getTransform(), glm::vec3(position.x, position.y, position.z));
+	return _this->getTransformData();
 }
 
 const std::vector<YoungEngine::Vertex>& YoungEngine::ParticleWrapper::getVertices()
 {
-	
 	return shape->getVertices();
 }
 

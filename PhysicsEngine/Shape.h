@@ -13,6 +13,7 @@ namespace YoungEngine
 	protected:
 		std::vector<Vertex>& getVerticesData();
 		std::vector<unsigned int>& getIndicesData();
+		glm::mat4& getTransformData();
 	public:
 		Shape(const glm::mat4& m = glm::mat4(1));
 		virtual void move(const glm::vec3& translate);
