@@ -31,3 +31,7 @@ const std::vector<unsigned int>& YoungEngine::Shape::trianglatedIndices()
 {
 	return indices;
 }
+
+YoungEngine::Shape::~Shape()
+{
+}

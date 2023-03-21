@@ -29,5 +29,7 @@ namespace YoungEngine {
 		void addForce(const Vector3& force);
 		void integrate(float duration);
 		void clearAccumulator();
+
+		virtual ~Particle();
 	};
 };

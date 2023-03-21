@@ -26,6 +26,10 @@ void YoungEngine::Particle::clearAccumulator()
 	forceAccum.clear();
 }
 
+YoungEngine::Particle::~Particle()
+{
+}
+
 void YoungEngine::Particle::setPosition(const Vector3& pos)
 {
 	position = pos;

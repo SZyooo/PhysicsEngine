@@ -63,6 +63,12 @@
     <ClCompile Include="HelperFuncs.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="ParticleForceGenerator.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleWrapper.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math.h">
@@ -113,5 +119,21 @@
     <ClInclude Include="HelperFuncs.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="ParticleWrapper.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="cube_vs.glsl">
+      <Filter>资源文件</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cube_fs.glsl">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="cube_gs.glsl">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
 </Project>

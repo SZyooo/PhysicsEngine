@@ -77,6 +77,7 @@ Vector3& YoungEngine::Vector3::operator-()
 	x = -x;
 	y = -y;
 	z = -z;
+	return *this;
 }
 
 void YoungEngine::Vector3::addScaledVector(const Vector3& other, float factor)

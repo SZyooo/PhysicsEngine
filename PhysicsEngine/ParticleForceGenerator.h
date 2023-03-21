@@ -4,5 +4,6 @@ namespace YoungEngine {
 	class ParticleForceGenerator {
 	public:
 		virtual void updateForce(Particle& p, float duration) = 0;
+		virtual ~ParticleForceGenerator() = 0;
 	};
 };
