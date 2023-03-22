@@ -141,6 +141,8 @@
   <ItemGroup>
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="Debug.cpp" />
+    <ClCompile Include="ForceGenerator.cpp" />
+    <ClCompile Include="Gravity.cpp" />
     <ClCompile Include="HelperFuncs.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Math.cpp" />
@@ -154,13 +156,17 @@
     <ClCompile Include="ParticleGravity.cpp" />
     <ClCompile Include="ParticleSpring.cpp" />
     <ClCompile Include="ParticleWrapper.cpp" />
+    <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="Shape.cpp" />
+    <ClCompile Include="Spring.cpp" />
     <ClCompile Include="Vector3.cpp" />
     <ClCompile Include="Vertex.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Cube.h" />
     <ClInclude Include="Debug.h" />
+    <ClInclude Include="ForceGenerator.h" />
+    <ClInclude Include="Gravity.h" />
     <ClInclude Include="HelperFuncs.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="Particle.h" />
@@ -173,7 +179,9 @@
     <ClInclude Include="ParticleGravity.h" />
     <ClInclude Include="ParticleSpring.h" />
     <ClInclude Include="ParticleWrapper.h" />
+    <ClInclude Include="RigidBody.h" />
     <ClInclude Include="Shape.h" />
+    <ClInclude Include="Spring.h" />
     <ClInclude Include="Vector3.h" />
     <ClInclude Include="Vertex.h" />
   </ItemGroup>

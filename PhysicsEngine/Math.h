@@ -1,11 +1,6 @@
 #pragma once
-
+#include<glm/gtc/quaternion.hpp>
 namespace YoungEngine {
-
-
-	
-
-
 	class Vector3;
 	/// <summary>
 	/// generate an orthornormal basis through two non-parallel vector v1,v2
@@ -17,4 +12,5 @@ namespace YoungEngine {
 	Vector3 Cross(const Vector3& v1, const Vector3& v2);
 	float Dot(const Vector3& v1, const Vector3& v2);
 	Vector3 Normalize(const Vector3& v);
+	void RotateQuaternion(glm::quat& q,const Vector3& rot,float duration);
 };

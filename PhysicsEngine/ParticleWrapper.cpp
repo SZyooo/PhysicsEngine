@@ -19,7 +19,9 @@ void YoungEngine::ParticleWrapper::move(const glm::vec3& translate)
 const glm::mat4& YoungEngine::ParticleWrapper::getTransform() const
 {
 	YoungEngine::ParticleWrapper* _this = const_cast<YoungEngine::ParticleWrapper*>(this);
-	_this->getTransformData() = glm::translate(shape->getTransform(), glm::vec3(position.x, position.y, position.z));
+	glm::mat4 transform = shape->getTransform();
+	transform[3] += glm::vec4(position.x, position.y, position.z, 0);
+	_this->getTransformData() = transform;
 	return _this->getTransformData();
 }
 

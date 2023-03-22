@@ -6,6 +6,7 @@
 #include"ParticleWrapper.h"
 #include"ParticleAnchoredSpring.h"
 #include"ParticleGravity.h"
+#include"ParticleBuoyancy.h"
 #include"Debug.h"
 #pragma comment(lib,"mylib.lib")
 
@@ -27,7 +28,7 @@ int main() {
 	};
 	auto window = initGL(WIN_WID,WIN_HEI);
 	
-	Camera camera(2, 2, WIN_WID, WIN_HEI, 0, -90, {0,0,10});
+	Camera camera(2, 2, WIN_WID, WIN_HEI, 0, -90, {0,0,5});
 	CameraControllor cc;
 	cc.SetUpCamera(&camera);
 	cc.SetUpCentre(WIN_WID / 2, WIN_HEI / 2);
@@ -37,7 +38,7 @@ int main() {
 	GLuint defaultVao;
 	glCreateVertexArrays(1, &defaultVao);
 
-	glm::mat4 model = glm::scale(glm::mat4(1), vec3(0.1));
+	glm::mat4 model = glm::scale(glm::mat4(1), vec3(0.5));
 	YoungEngine::ParticleWrapper cube(new YoungEngine::Cube(model, 1, 1, 1));
 	cube.setMass(10);
 	cube.setDamping(0.9);
@@ -54,6 +55,8 @@ int main() {
 
 	YoungEngine::ParticleAnchoredSpring anchoredSpring({ 0,0,0 }, 100, 0.1);
 	YoungEngine::ParticleGravity gravity({ 0,-10,0 });
+	YoungEngine::ParticleBuoyancy buoyancy(0.5, 0.5 * 0.5 * 0.5, 0, 1000, {0,1,0});
+
 
 	GLuint drawSpring = create_program("line_vs.glsl", "line_fs.glsl");
 	glm::vec3 anchorPos = YoungEngine::convertVector3ToGLMVec3(anchoredSpring.getAnchorPosition());
@@ -61,6 +64,8 @@ int main() {
 	glUniform3fv(glGetUniformLocation(drawSpring, "pos[0]"), 1, glm::value_ptr(anchorPos));
 	glUniformMatrix4fv(glGetUniformLocation(drawSpring, "proj"), 1, GL_FALSE, glm::value_ptr(camera.GetProjectMat()));
 	
+	cube.setPosition({ 0, -10, 0 });
+
 	double time = glfwGetTime();
 	glEnable(GL_DEPTH_TEST);
 	while (glfwWindowShouldClose(window) == false)
@@ -71,7 +76,8 @@ int main() {
 		double dt = t - time;
 		cc.SetUpDeltaTime(dt);
 		time = t;
-		anchoredSpring.updateForce(cube, dt);
+		//anchoredSpring.updateForce(cube, dt);
+		buoyancy.updateForce(cube, dt);
 		gravity.updateForce(cube, dt);
 		cube.integrate(dt);
 		YoungEngine::PrintVector(cube.getVelocity(),"velocity");

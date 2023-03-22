@@ -69,6 +69,18 @@
     <ClCompile Include="ParticleWrapper.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="RigidBody.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ForceGenerator.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Gravity.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Spring.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math.h">
@@ -120,6 +132,18 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="ParticleWrapper.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RigidBody.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ForceGenerator.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Gravity.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Spring.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

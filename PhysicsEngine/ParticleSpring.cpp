@@ -15,6 +15,6 @@ void YoungEngine::ParticleSpring::updateForce(Particle& p, float duration)
 	Vector3 d = targetPos - thisEndPos;
 	Vector3 dir = d;
 	dir.normalize();
-	Vector3 force = -springConstant * abs(d.magnitude() - restLength) * dir;
+	Vector3 force = -springConstant * (d.magnitude() - restLength) * dir;
 	p.addForce(force);
 }

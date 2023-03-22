@@ -27,3 +27,10 @@ YoungEngine::Vector3 YoungEngine::Normalize(const Vector3& v)
 	nv.normalize();
 	return nv;
 }
+
+void YoungEngine::RotateQuaternion(glm::quat& q, const Vector3& rot, float duration)
+{
+	glm::quat q_ = q * glm::quat(0, rot.x, rot.y, rot.z);
+	q_ *= duration * 0.5;
+	q += q_;
+}
