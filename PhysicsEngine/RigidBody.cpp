@@ -4,21 +4,17 @@
 void YoungEngine::RigidBody::calculateDerivedData()
 {
 	orientation = glm::normalize(orientation);
-
-	float yy = orientation.y * orientation.y;
-	float xx = orientation.x * orientation.x;
-	float zz = orientation.z * orientation.z;
-	float x = orientation.x;
-	float y = orientation.y;
-	float z = orientation.z;
-	float w = orientation.w;
 	glm::mat3 m(orientation);
 	transform[0] = glm::vec4(m[0].x, m[0].y, m[0].z, 0);
 	transform[1] = glm::vec4(m[1].x, m[1].y, m[1].z, 0);
 	transform[2] = glm::vec4(m[2].x, m[2].y, m[2].z, 0);
 	transform[3] = glm::vec4(position.x,position.y,position.z,1);
 	inverseInertiaTensorWorld = m * inverseInertiaTensor * glm::transpose(m);
-	
+}
+
+glm::mat4& YoungEngine::RigidBody::getTransformData()
+{
+	return transform;
 }
 
 void YoungEngine::RigidBody::setInertiaTensor(const glm::mat3& inertiaTensor)
@@ -101,7 +97,7 @@ void YoungEngine::RigidBody::setMass(float mass)
 	{
 		inverseMass = INFINITY;
 	}
-	else if (mass = INFINITY)
+	else if (mass == INFINITY)
 	{
 		inverseMass = 0;
 	}

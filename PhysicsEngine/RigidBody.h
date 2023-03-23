@@ -25,6 +25,8 @@ namespace YoungEngine
 		bool isAwake;
 
 		void calculateDerivedData();
+	protected:
+		glm::mat4& getTransformData();
 	public:
 		void setInertiaTensor(const glm::mat3& inertiaTensor);
 		void addForce(const Vector3& force);

@@ -1,5 +1,5 @@
 #include "HelperFuncs.h"
-#include<GL/glew.h>
+#include<Tool.h>
 #include"Vertex.h"
 unsigned int YoungEngine::moveVertexToBuffer(const std::vector<YoungEngine::Vertex>& vertices)
 {
@@ -23,5 +23,19 @@ unsigned int YoungEngine::generateVAOForCubeShader(unsigned int bufferid)
 glm::vec3 YoungEngine::convertVector3ToGLMVec3(const Vector3& v)
 {
     return glm::vec3(v.x,v.y,v.z);
+}
+
+void YoungEngine::drawBasis(const glm::vec3& pos, const glm::mat4& view, const glm::mat4& project)
+{
+    static GLuint program = create_program("basis_vs.glsl", "basis_fs.glsl", 0, 0, "basis_gs.glsl");
+    glUseProgram(program);
+    glUniformMatrix4fv(glGetUniformLocation(program, "view"),1,GL_FALSE,glm::value_ptr(view));
+    glUniformMatrix4fv(glGetUniformLocation(program, "proj"), 1, GL_FALSE, glm::value_ptr(project));
+    glUniform3fv(glGetUniformLocation(program, "position"),1,glm::value_ptr(pos));
+    glLineWidth(3);
+    glDisable(GL_DEPTH_TEST);
+    glDrawArrays(GL_POINTS, 0, 1);
+    glEnable(GL_DEPTH_TEST);
+    glLineWidth(1);
 }
 

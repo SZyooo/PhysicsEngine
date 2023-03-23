@@ -81,6 +81,15 @@
     <ClCompile Include="Spring.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="RigidBodyWrapper.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Bungee.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="AnchordBungee.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math.h">
@@ -146,6 +155,15 @@
     <ClInclude Include="Spring.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="RigidBodyWrapper.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Bungee.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="AnchordBungee.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="cube_vs.glsl">
@@ -163,6 +181,15 @@
       <Filter>资源文件</Filter>
     </None>
     <None Include="line_fs.glsl">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="basis_vs.glsl">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="basis_gs.glsl">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="basis_fs.glsl">
       <Filter>资源文件</Filter>
     </None>
   </ItemGroup>

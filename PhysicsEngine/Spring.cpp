@@ -11,10 +11,11 @@ YoungEngine::Spring::Spring(const Vector3& localConnectionPos, RigidBody* theOth
 
 void YoungEngine::Spring::updateForce(RigidBody* rigidBody, float duration)
 {
-	Vector3 dir = selfConnectionPoint - theOtherEnd;
+	Vector3 connInWorld = rigidBody->transformLocalPointToWorldSpace(selfConnectionPoint);
+	Vector3 theOtherEndInWorld = other->transformLocalPointToWorldSpace(theOtherEnd);
+	Vector3 dir = connInWorld - theOtherEndInWorld;
 	float mag = dir.magnitude();
 	dir.normalize();
 	Vector3 force = -springConstant * (mag - restLength) * dir;
-	Vector3 forceInWorld = rigidBody->transformLocalVectorToWorldSpace(force);
-	rigidBody->addForceAtBodyPoint(forceInWorld, selfConnectionPoint);
+	rigidBody->addForceAtPoint(force, connInWorld);
 }
