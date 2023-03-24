@@ -2,8 +2,8 @@
 #include<cmath>
 using namespace YoungEngine;
 
-Vector3::Vector3() :x(0), y(0), z(0) {}
-Vector3::Vector3(float px, float py, float pz) :x(px), y(py), z(pz) {}
+Vector3::Vector3() :x(0), y(0), z(0),padding(0) {}
+Vector3::Vector3(float px, float py, float pz) :x(px), y(py), z(pz),padding(0) {}
 void Vector3::invert() {
 	x = -x;
 	y = -y;

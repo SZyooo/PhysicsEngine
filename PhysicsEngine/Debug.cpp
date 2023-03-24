@@ -1,7 +1,7 @@
 #include "Debug.h"
 #include<iostream>
 #include"Vector3.h"
-
+#include"Vertex.h"
 #define DEBUGGING
 #define CONSOLE_OUTPUT
 
@@ -17,9 +17,17 @@ void YoungEngine::PrintInfo(std::string& s)
 void YoungEngine::PrintVector(const YoungEngine::Vector3& v, const std::string& name)
 {
 #ifdef CONSOLE_OUTPUT
-	std::cout << name << "=[" << v.x << "," << v.y << "," << v.z << "]" << std::endl;
+	std::cout << name << (name.length() > 0 ? "=" : "") << "[" << v.x << "," << v.y << "," << v.z << "]" << std::endl;
 #else
 
+#endif // CONSOLE_OUTPUT
+
+}
+
+void YoungEngine::PrintVector(const Vertex& v, const std::string& name)
+{
+#ifdef CONSOLE_OUTPUT
+	std::cout << name <<(name.length()>0?"=":"")<<"[" << v.x() << "," << v.y() << "," << v.z() << "]" << std::endl;
 #endif // CONSOLE_OUTPUT
 
 }

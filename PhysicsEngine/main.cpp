@@ -11,6 +11,7 @@
 #include"Debug.h"
 #include"AnchordBungee.h"
 #include"Gravity.h"
+#include "Geometry.h"
 #pragma comment(lib,"mylib.lib")
 
 #define WIN_WID 1000
@@ -87,6 +88,24 @@ int main() {
 
 	double time = glfwGetTime();
 	glEnable(GL_DEPTH_TEST);
+
+	//Test Barycentric
+	YoungEngine::Vertex a(1, 1, -2);
+	YoungEngine::Vertex b(-1, 0, 1);
+	YoungEngine::Vertex c(4, 1, -5);
+	YoungEngine::Vertex p(8,8,-16);
+	float u, v, w;
+	YoungEngine::Barycentric(a, b, c, p, u, v, w);
+	YoungEngine::PrintFloat(u);
+	YoungEngine::PrintFloat(v);
+	YoungEngine::PrintFloat(w);
+	YoungEngine::PrintVector(u * a + v * b + w * c);
+	YoungEngine::BarycentricCramerRule(a, b, c, p, u, v, w);
+	YoungEngine::PrintFloat(u);
+	YoungEngine::PrintFloat(v);
+	YoungEngine::PrintFloat(w);
+	YoungEngine::PrintVector(u * a + v * b + w * c);
+
 	while (glfwWindowShouldClose(window) == false)
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -103,7 +122,7 @@ int main() {
 		//YoungEngine::PrintVector(cube.getVelocity(),"velocity");
 		rigidGravity.updateForce(&cubeBody, dt);
 		bungee.updateForce(&cubeBody, dt);
-		YoungEngine::PrintVector(cubeBody.getRotation(), "rotation");
+		//YoungEngine::PrintVector(cubeBody.getRotation(), "rotation");
 		cubeBody.integrate(dt);
 		
 		glUseProgram(drawcube);

@@ -2,6 +2,7 @@
 #include<glm/gtc/quaternion.hpp>
 namespace YoungEngine {
 	class Vector3;
+	class Vertex;
 	/// <summary>
 	/// generate an orthornormal basis through two non-parallel vector v1,v2
 	/// </summary>
