@@ -163,8 +163,10 @@
     <ClCompile Include="RigidBodyWrapper.cpp" />
     <ClCompile Include="Shape.cpp" />
     <ClCompile Include="Spring.cpp" />
+    <ClCompile Include="Vec2D.cpp" />
+    <ClCompile Include="Vec3D.cpp" />
     <ClCompile Include="Vector3.cpp" />
-    <ClCompile Include="Vertex.cpp" />
+    <ClCompile Include="Point.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnchordBungee.h" />
@@ -190,7 +192,10 @@
     <ClInclude Include="RigidBodyWrapper.h" />
     <ClInclude Include="Shape.h" />
     <ClInclude Include="Spring.h" />
+    <ClInclude Include="Vec2D.h" />
+    <ClInclude Include="Vec3D.h" />
     <ClInclude Include="Vector3.h" />
+    <ClInclude Include="Point.h" />
     <ClInclude Include="Vertex.h" />
   </ItemGroup>
   <ItemGroup>
@@ -202,6 +207,8 @@
     <None Include="basis_vs.glsl" />
     <None Include="cube_fs.glsl" />
     <None Include="cube_gs.glsl" />
+    <None Include="default_fs.glsl" />
+    <None Include="default_vs.glsl" />
     <None Include="line_fs.glsl" />
     <None Include="line_vs.glsl" />
   </ItemGroup>

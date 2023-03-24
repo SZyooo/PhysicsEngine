@@ -7,11 +7,12 @@
 #include"ParticleAnchoredSpring.h"
 #include"ParticleGravity.h"
 #include"ParticleBuoyancy.h"
-#include "RigidBodyWrapper.h"
+#include"RigidBodyWrapper.h"
 #include"Debug.h"
 #include"AnchordBungee.h"
 #include"Gravity.h"
 #include "Geometry.h"
+#include "Point.h"
 #pragma comment(lib,"mylib.lib")
 
 #define WIN_WID 1000
@@ -43,8 +44,8 @@ int main() {
 	glCreateVertexArrays(1, &defaultVao);
 
 	glm::mat4 model = glm::scale(glm::mat4(1), vec3(0.5));
-	YoungEngine::ParticleWrapper cube(new YoungEngine::Cube(model, 1, 1, 1));
-	YoungEngine::RigidBodyWrapper cubeBody(new YoungEngine::Cube(model, 1, 1, 1));
+	YoungEngine::ParticleWrapper cube(new YoungEngine::Geometry::Cube(model, 1, 1, 1));
+	YoungEngine::RigidBodyWrapper cubeBody(new YoungEngine::Geometry::Cube(model, 1, 1, 1));
 	cube.setMass(10);
 	cube.setDamping(0.9);
 	cubeBody.setAngularDamping(0.9);
@@ -62,7 +63,7 @@ int main() {
 	cubeBody.move({2, 0, 0});
 	//cubeBody.setRotation({ 1,1,1 });
 
-	GLuint drawcube = create_program("cube_vs.glsl", "cube_fs.glsl",0,0,"cube_gs.glsl");
+	GLuint drawcube = create_program("default_vs.glsl", "default_fs.glsl");
 	GLuint cubeBuffer = YoungEngine::moveVertexToBuffer(cube.getVertices());
 	GLuint cubeVao = YoungEngine::generateVAOForCubeShader(cubeBuffer);
 	glBindVertexArray(cubeVao);
@@ -90,10 +91,10 @@ int main() {
 	glEnable(GL_DEPTH_TEST);
 
 	//Test Barycentric
-	YoungEngine::Vertex a(1, 1, -2);
-	YoungEngine::Vertex b(-1, 0, 1);
-	YoungEngine::Vertex c(4, 1, -5);
-	YoungEngine::Vertex p(8,8,-16);
+	YoungEngine::Point a(1, 1, -2);
+	YoungEngine::Point b(-1, 0, 1);
+	YoungEngine::Point c(4, 1, -5);
+	YoungEngine::Point p(8,8,-16);
 	float u, v, w;
 	YoungEngine::Barycentric(a, b, c, p, u, v, w);
 	YoungEngine::PrintFloat(u);

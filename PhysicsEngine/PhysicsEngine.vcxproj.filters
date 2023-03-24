@@ -57,10 +57,7 @@
     <ClCompile Include="ParticleBuoyancy.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Shape.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Vertex.cpp">
+    <ClCompile Include="Point.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="HelperFuncs.cpp">
@@ -98,6 +95,15 @@
     </ClCompile>
     <ClCompile Include="Cube.cpp">
       <Filter>源文件\Geometries</Filter>
+    </ClCompile>
+    <ClCompile Include="Shape.cpp">
+      <Filter>源文件\Geometries</Filter>
+    </ClCompile>
+    <ClCompile Include="Vec2D.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Vec3D.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -137,10 +143,7 @@
     <ClInclude Include="ParticleBuoyancy.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Shape.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Vertex.h">
+    <ClInclude Include="Point.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="HelperFuncs.h">
@@ -176,6 +179,18 @@
     <ClInclude Include="Cube.h">
       <Filter>头文件\Geometries</Filter>
     </ClInclude>
+    <ClInclude Include="Shape.h">
+      <Filter>头文件\Geometries</Filter>
+    </ClInclude>
+    <ClInclude Include="Vertex.h">
+      <Filter>头文件\Geometries</Filter>
+    </ClInclude>
+    <ClInclude Include="Vec2D.h">
+      <Filter>头文件\Geometries</Filter>
+    </ClInclude>
+    <ClInclude Include="Vec3D.h">
+      <Filter>头文件\Geometries</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="cube_vs.glsl">
@@ -202,6 +217,12 @@
       <Filter>资源文件</Filter>
     </None>
     <None Include="basis_fs.glsl">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="default_vs.glsl">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="default_fs.glsl">
       <Filter>资源文件</Filter>
     </None>
   </ItemGroup>

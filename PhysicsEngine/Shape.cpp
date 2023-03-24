@@ -1,41 +1,41 @@
 #include "Shape.h"
 #include <glm/gtc/matrix_transform.hpp>
-std::vector<YoungEngine::Vertex>& YoungEngine::Shape::getVerticesData()
+std::vector<YoungEngine::Geometry::Vertex>& YoungEngine::Geometry::Shape::getVerticesData()
 {
 	return vertices;
 }
-std::vector<unsigned int>& YoungEngine::Shape::getIndicesData()
+std::vector<unsigned int>& YoungEngine::Geometry::Shape::getIndicesData()
 {
 	return indices;
 }
-glm::mat4& YoungEngine::Shape::getTransformData()
+glm::mat4& YoungEngine::Geometry::Shape::getTransformData()
 {
 	return model;
 }
-YoungEngine::Shape::Shape(const glm::mat4& m)
+YoungEngine::Geometry::Shape::Shape(const glm::mat4& m)
 	:model(m)
 {
 }
-void YoungEngine::Shape::move(const glm::vec3& translate)
+void YoungEngine::Geometry::Shape::move(const glm::vec3& translate)
 {
 	model = glm::translate(model, translate);
 }
 
-const glm::mat4& YoungEngine::Shape::getTransform() const
+const glm::mat4& YoungEngine::Geometry::Shape::getTransform() const
 {
 	return model;
 }
 
-const std::vector<YoungEngine::Vertex>& YoungEngine::Shape::getVertices()
+const std::vector<YoungEngine::Geometry::Vertex>& YoungEngine::Geometry::Shape::getVertices()
 {
 	return vertices;
 }
 
-const std::vector<unsigned int>& YoungEngine::Shape::trianglatedIndices()
+const std::vector<unsigned int>& YoungEngine::Geometry::Shape::trianglatedIndices()
 {
 	return indices;
 }
 
-YoungEngine::Shape::~Shape()
+YoungEngine::Geometry::Shape::~Shape()
 {
 }

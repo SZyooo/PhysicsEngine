@@ -1,11 +1,11 @@
 #include "RigidBodyWrapper.h"
 
-YoungEngine::RigidBodyWrapper::RigidBodyWrapper(Shape* shape)
+YoungEngine::RigidBodyWrapper::RigidBodyWrapper(Geometry::Shape* shape)
 	:shape(shape)
 {
 	if (shape == nullptr)
 	{
-		shape = new Shape;
+		shape = new Geometry::Shape;
 	}
 }
 
@@ -28,7 +28,7 @@ const glm::mat4& YoungEngine::RigidBodyWrapper::getTransform() const
 	return _this->RigidBody::getTransformData();
 }
 
-const std::vector<YoungEngine::Vertex>& YoungEngine::RigidBodyWrapper::getVertices()
+const std::vector<YoungEngine::Geometry::Vertex>& YoungEngine::RigidBodyWrapper::getVertices()
 {
 	return shape->getVertices();
 }

@@ -1,11 +1,22 @@
 #include "HelperFuncs.h"
 #include<Tool.h>
 #include"Vertex.h"
-unsigned int YoungEngine::moveVertexToBuffer(const std::vector<YoungEngine::Vertex>& vertices)
+#include"Vector3.h"
+unsigned int YoungEngine::moveVertexToBuffer(const std::vector<YoungEngine::Geometry::Vertex>& vertices)
 {
     GLuint buffer;
     glCreateBuffers(1, &buffer);
-    glNamedBufferStorage(buffer, vertices.size() * YoungEngine::Vertex::StructSize, &vertices[0], GL_MAP_WRITE_BIT);
+    glNamedBufferStorage(buffer, vertices.size() * YoungEngine::Geometry::Vertex::StructSize, nullptr, GL_MAP_WRITE_BIT);
+    char* ptr = (char*)glMapNamedBuffer(buffer, GL_WRITE_ONLY);
+    for (auto& v : vertices)
+    {
+        memcpy(ptr, &v.position, 16); ptr += 16;
+        memcpy(ptr, &v.norm, 16); ptr += 16;
+        memcpy(ptr, &v.u, 4); ptr += 4;
+        memcpy(ptr, &v.v, 4); ptr += 4;
+        ptr += 8;
+    }
+    glUnmapNamedBuffer(buffer);
     return buffer;
 }
 
@@ -14,9 +25,15 @@ unsigned int YoungEngine::generateVAOForCubeShader(unsigned int bufferid)
     GLuint vao;
     glCreateVertexArrays(1, &vao);
     glVertexArrayAttribFormat(vao, 0, 4, GL_FLOAT, GL_FALSE, 0);
+    glVertexArrayAttribFormat(vao, 1, 4, GL_FLOAT, GL_FALSE, 16);
+    glVertexArrayAttribFormat(vao, 2, 2, GL_FLOAT, GL_FALSE, 32);
     glVertexArrayAttribBinding(vao, 0, 0);
-    glVertexArrayVertexBuffer(vao, 0, bufferid, 0, YoungEngine::Vertex::StructSize);
+    glVertexArrayAttribBinding(vao, 1, 0);
+    glVertexArrayAttribBinding(vao, 2, 0);
+    glVertexArrayVertexBuffer(vao, 0, bufferid, 0, YoungEngine::Geometry::Vertex::StructSize);
     glEnableVertexArrayAttrib(vao, 0);
+    glEnableVertexArrayAttrib(vao, 1);
+    glEnableVertexArrayAttrib(vao, 2);
     return vao;
 }
 

@@ -4,7 +4,7 @@
 
 namespace YoungEngine
 {
-	class ParticleWrapper :public Particle, public Shape
+	class ParticleWrapper :public Particle, public Geometry::Shape
 	{
 		Shape* shape;
 	public:
@@ -12,7 +12,7 @@ namespace YoungEngine
 		virtual void move(const glm::vec3& translate);
 		virtual const glm::mat4& getTransform()const;
 
-		virtual const std::vector<Vertex>& getVertices();
+		virtual const std::vector<Geometry::Vertex>& getVertices();
 		virtual const std::vector<unsigned int>& trianglatedIndices();
 		virtual ~ParticleWrapper();
 	};

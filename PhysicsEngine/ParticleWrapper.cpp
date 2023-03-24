@@ -25,7 +25,7 @@ const glm::mat4& YoungEngine::ParticleWrapper::getTransform() const
 	return _this->getTransformData();
 }
 
-const std::vector<YoungEngine::Vertex>& YoungEngine::ParticleWrapper::getVertices()
+const std::vector<YoungEngine::Geometry::Vertex>& YoungEngine::ParticleWrapper::getVertices()
 {
 	return shape->getVertices();
 }

@@ -1,8 +1,8 @@
 #pragma once
 #include<vector>
 #include<glm/glm.hpp>
-#include "Vertex.h"
-namespace YoungEngine
+#include"Vertex.h"
+namespace YoungEngine::Geometry
 {
 	class Vertex;
 	class Shape

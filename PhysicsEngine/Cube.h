@@ -1,7 +1,7 @@
 #pragma once
 #include"Shape.h"
 #include"Vertex.h"
-namespace YoungEngine
+namespace YoungEngine::Geometry
 {
 	class Cube:public Shape
 	{

@@ -1,5 +1,5 @@
 #include "Geometry.h"
-#include "Vertex.h"
+#include "Point.h"
 #include "Vector3.h"
 #include "Math.h"
 
@@ -12,7 +12,7 @@ inline float signedArea2D(float x1,float y1,float x2,float y2,float x3,float y3)
 	return (x1 - x2) * (y2 - y3) - (x2 - x3) * (y1 - y2);
 }
 
-void YoungEngine::Barycentric(const Vertex& a, const Vertex& b, const Vertex& c, const Vertex& p,float& u, float& v, float& w)
+void YoungEngine::Barycentric(const Point& a, const Point& b, const Point& c, const Point& p,float& u, float& v, float& w)
 {
 	Vector3 norm = Cross(a - b, b - c);
 	float px = abs(norm.x);
@@ -44,7 +44,7 @@ void YoungEngine::Barycentric(const Vertex& a, const Vertex& b, const Vertex& c,
 	w = 1 - u - v;
 }
 
-void YoungEngine::BarycentricCramerRule(const Vertex& A, const Vertex& B, const Vertex& C, const Vertex& P, float& u, float& v, float& w)
+void YoungEngine::BarycentricCramerRule(const Point& A, const Point& B, const Point& C, const Point& P, float& u, float& v, float& w)
 {
 	Vector3 v0 = B - A;
 	Vector3 v1 = C - A;
