@@ -20,7 +20,7 @@ unsigned int YoungEngine::moveVertexToBuffer(const std::vector<YoungEngine::Geom
     return buffer;
 }
 
-unsigned int YoungEngine::generateVAOForCubeShader(unsigned int bufferid)
+unsigned int YoungEngine::generateVAOForDefaultShader(unsigned int bufferid)
 {
     GLuint vao;
     glCreateVertexArrays(1, &vao);

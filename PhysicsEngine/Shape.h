@@ -22,5 +22,7 @@ namespace YoungEngine::Geometry
 		virtual const std::vector<Vertex>& getVertices();
 		virtual const std::vector<unsigned int>& trianglatedIndices();
 		virtual ~Shape();
+		virtual int getIndicesCount()const;
+
 	};
 };

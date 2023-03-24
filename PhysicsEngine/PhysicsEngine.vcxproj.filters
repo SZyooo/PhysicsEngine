@@ -105,6 +105,12 @@
     <ClCompile Include="Vec3D.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Sphere.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Vertex.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math.h">
@@ -189,6 +195,9 @@
       <Filter>头文件\Geometries</Filter>
     </ClInclude>
     <ClInclude Include="Vec3D.h">
+      <Filter>头文件\Geometries</Filter>
+    </ClInclude>
+    <ClInclude Include="Sphere.h">
       <Filter>头文件\Geometries</Filter>
     </ClInclude>
   </ItemGroup>

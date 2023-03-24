@@ -15,7 +15,7 @@ namespace YoungEngine
 /// <param name="vertices"></param>
 /// <returns>buffer id</returns>
 	unsigned int moveVertexToBuffer(const std::vector<Geometry::Vertex>& vertices);
-	unsigned int generateVAOForCubeShader(unsigned int bufferid);
+	unsigned int generateVAOForDefaultShader(unsigned int bufferid);
 	glm::vec3 convertVector3ToGLMVec3(const Vector3& v);
 	void drawBasis(const glm::vec3& pos, const glm::mat4& view, const glm::mat4& project);
 };

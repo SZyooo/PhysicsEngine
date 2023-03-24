@@ -13,6 +13,12 @@
 #include"Gravity.h"
 #include "Geometry.h"
 #include "Point.h"
+#include "Sphere.h"
+
+//#define STB_IMAGE_IMPLEMENTATION
+#include<stb_image.h>
+
+
 #pragma comment(lib,"mylib.lib")
 
 #define WIN_WID 1000
@@ -40,10 +46,11 @@ int main() {
 	glfwSetKeyCallback(window, CameraControllor::KeyInputCallback);
 	glfwSetCursorPosCallback(window, CameraControllor::MouseMoveCallback);
 
-	GLuint defaultVao;
-	glCreateVertexArrays(1, &defaultVao);
+	//GLuint defaultVao;
+	//glCreateVertexArrays(1, &defaultVao);
 
 	glm::mat4 model = glm::scale(glm::mat4(1), vec3(0.5));
+	model = glm::translate(model, glm::vec3(1, 0, 0));
 	YoungEngine::ParticleWrapper cube(new YoungEngine::Geometry::Cube(model, 1, 1, 1));
 	YoungEngine::RigidBodyWrapper cubeBody(new YoungEngine::Geometry::Cube(model, 1, 1, 1));
 	cube.setMass(10);
@@ -63,14 +70,14 @@ int main() {
 	cubeBody.move({2, 0, 0});
 	//cubeBody.setRotation({ 1,1,1 });
 
-	GLuint drawcube = create_program("default_vs.glsl", "default_fs.glsl");
+	GLuint defaultDraw = create_program("default_vs.glsl", "default_fs.glsl");
 	GLuint cubeBuffer = YoungEngine::moveVertexToBuffer(cube.getVertices());
-	GLuint cubeVao = YoungEngine::generateVAOForCubeShader(cubeBuffer);
+	GLuint cubeVao = YoungEngine::generateVAOForDefaultShader(cubeBuffer);
 	glBindVertexArray(cubeVao);
-	glUseProgram(drawcube);
-	glUniformMatrix4fv(glGetUniformLocation(drawcube, "project"), 1, GL_FALSE, glm::value_ptr(camera.GetProjectMat()));
-	glUniformMatrix4fv(glGetUniformLocation(drawcube, "proj_inv"), 1, GL_FALSE, glm::value_ptr(glm::inverse(camera.GetProjectMat())));
-	glUniformMatrix4fv(glGetUniformLocation(drawcube, "model"), 1, GL_FALSE, glm::value_ptr(cube.getTransform()));
+	glUseProgram(defaultDraw);
+	glUniformMatrix4fv(glGetUniformLocation(defaultDraw, "project"), 1, GL_FALSE, glm::value_ptr(camera.GetProjectMat()));
+	glUniformMatrix4fv(glGetUniformLocation(defaultDraw, "proj_inv"), 1, GL_FALSE, glm::value_ptr(glm::inverse(camera.GetProjectMat())));
+	glUniformMatrix4fv(glGetUniformLocation(defaultDraw, "model"), 1, GL_FALSE, glm::value_ptr(cube.getTransform()));
 	
 
 	YoungEngine::ParticleAnchoredSpring anchoredSpring({ 0,0,0 }, 100, 0.1);
@@ -90,22 +97,38 @@ int main() {
 	double time = glfwGetTime();
 	glEnable(GL_DEPTH_TEST);
 
-	//Test Barycentric
-	YoungEngine::Point a(1, 1, -2);
-	YoungEngine::Point b(-1, 0, 1);
-	YoungEngine::Point c(4, 1, -5);
-	YoungEngine::Point p(8,8,-16);
-	float u, v, w;
-	YoungEngine::Barycentric(a, b, c, p, u, v, w);
-	YoungEngine::PrintFloat(u);
-	YoungEngine::PrintFloat(v);
-	YoungEngine::PrintFloat(w);
-	YoungEngine::PrintVector(u * a + v * b + w * c);
-	YoungEngine::BarycentricCramerRule(a, b, c, p, u, v, w);
-	YoungEngine::PrintFloat(u);
-	YoungEngine::PrintFloat(v);
-	YoungEngine::PrintFloat(w);
-	YoungEngine::PrintVector(u * a + v * b + w * c);
+	////Test Barycentric
+	//YoungEngine::Point a(1, 1, -2);
+	//YoungEngine::Point b(-1, 0, 1);
+	//YoungEngine::Point c(4, 1, -5);
+	//YoungEngine::Point p(8,8,-16);
+	//float u, v, w;
+	//YoungEngine::Barycentric(a, b, c, p, u, v, w);
+	//YoungEngine::PrintFloat(u);
+	//YoungEngine::PrintFloat(v);
+	//YoungEngine::PrintFloat(w);
+	//YoungEngine::PrintVector(u * a + v * b + w * c);
+	//YoungEngine::BarycentricCramerRule(a, b, c, p, u, v, w);
+	//YoungEngine::PrintFloat(u);
+	//YoungEngine::PrintFloat(v);
+	//YoungEngine::PrintFloat(w);
+	//YoungEngine::PrintVector(u * a + v * b + w * c);
+
+	//YoungEngine::Geometry::Sphere sphere(16, 1);
+	glm::mat4 rot = glm::rotate(glm::mat4(1.f), glm::radians(-90.f), glm::vec3(1, 0, 0));
+	YoungEngine::RigidBodyWrapper sphere(new YoungEngine::Geometry::Sphere(16, 1, rot));
+	sphere.setRotation({ 0, 1, 0 });//rotate around y-axis
+	GLuint sphereVao = YoungEngine::generateVAOForDefaultShader(YoungEngine::moveVertexToBuffer(sphere.getVertices()));
+	
+	int w, h,nc;
+	stbi_set_flip_vertically_on_load(true);
+	unsigned char* img = stbi_load("D:/earth.jpg", &w, &h, &nc, 0);
+	GLuint earth_tex;
+	glCreateTextures(GL_TEXTURE_2D, 1, &earth_tex);
+	glTextureStorage2D(earth_tex, 1, GL_RGB32F, w, h);
+	glTextureSubImage2D(earth_tex, 0, 0, 0, w, h, GL_RGB, GL_UNSIGNED_BYTE, img);
+	stbi_image_free(img);
+	glBindTextureUnit(0, earth_tex);
 
 	while (glfwWindowShouldClose(window) == false)
 	{
@@ -121,18 +144,26 @@ int main() {
 		//gravity.updateForce(cube, dt);
 		//cube.integrate(dt);
 		//YoungEngine::PrintVector(cube.getVelocity(),"velocity");
-		rigidGravity.updateForce(&cubeBody, dt);
-		bungee.updateForce(&cubeBody, dt);
+		rigidGravity.updateForce(&cubeBody, slowedDt);
+		bungee.updateForce(&cubeBody, slowedDt);
 		//YoungEngine::PrintVector(cubeBody.getRotation(), "rotation");
-		cubeBody.integrate(dt);
-		
-		glUseProgram(drawcube);
+		cubeBody.integrate(slowedDt);
+		sphere.integrate(dt);
+
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+		glUseProgram(defaultDraw);
 		glBindVertexArray(cubeVao);
-		glUniformMatrix4fv(glGetUniformLocation(drawcube, "view"), 1, GL_FALSE, glm::value_ptr(camera.GetViewMat()));
-		glUniformMatrix4fv(glGetUniformLocation(drawcube, "model"), 1, GL_FALSE, glm::value_ptr(cubeBody.getTransform()));
-		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, &cubeBody.trianglatedIndices()[0]);
+		glUniformMatrix4fv(glGetUniformLocation(defaultDraw, "view"), 1, GL_FALSE, glm::value_ptr(camera.GetViewMat()));
+		glUniformMatrix4fv(glGetUniformLocation(defaultDraw, "model"), 1, GL_FALSE, glm::value_ptr(cubeBody.getTransform()));
+		glDrawElements(GL_TRIANGLES, cubeBody.getIndicesCount(), GL_UNSIGNED_INT, &cubeBody.trianglatedIndices()[0]);
+
+		glBindVertexArray(sphereVao);
+		glUniformMatrix4fv(glGetUniformLocation(defaultDraw, "view"), 1, GL_FALSE, glm::value_ptr(camera.GetViewMat()));
+		glUniformMatrix4fv(glGetUniformLocation(defaultDraw, "model"), 1, GL_FALSE, glm::value_ptr(sphere.getTransform()));
+		glDrawElements(GL_TRIANGLES, sphere.getIndicesCount(), GL_UNSIGNED_INT, &sphere.trianglatedIndices()[0]);
+
 		glUseProgram(drawSpring);
-		glBindVertexArray(defaultVao);
 		YoungEngine::Vector3 cnn = cubeBody.transformLocalPointToWorldSpace({ 0.5,0.5,0.5 });
 		glm::vec3 particle_pos = YoungEngine::convertVector3ToGLMVec3(cnn);
 		glUniform3fv(glGetUniformLocation(drawSpring, "pos[1]"), 1, glm::value_ptr(particle_pos));

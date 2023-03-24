@@ -8,7 +8,6 @@ namespace YoungEngine::Geometry
 		Vec3D position;
 		Vec3D norm;
 		float u, v;
-
 		const static int StructSize = 48;
 	};
 };

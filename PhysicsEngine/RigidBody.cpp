@@ -17,6 +17,13 @@ glm::mat4& YoungEngine::RigidBody::getTransformData()
 	return transform;
 }
 
+YoungEngine::RigidBody::RigidBody()
+	:inverseMass(0.1),linearDamping(1),angularDamping(1),position(0,0,0),velocity(0,0,0),rotation(0,0,0),
+	constantAcceleration(0,0,0),forceAccum(0,0,0),torquesAcum(0,0,0),lastFrameAcceleration(0,0,0),
+	isAwake(true)
+{
+}
+
 void YoungEngine::RigidBody::setInertiaTensor(const glm::mat3& inertiaTensor)
 {
 	inverseInertiaTensor = glm::inverse(inertiaTensor);

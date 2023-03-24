@@ -28,15 +28,16 @@ namespace YoungEngine
 	protected:
 		glm::mat4& getTransformData();
 	public:
+		RigidBody();
 		void setInertiaTensor(const glm::mat3& inertiaTensor);
 		void addForce(const Vector3& force);
 		void clearAccumulators();
 		void addForceAtPoint(const Vector3& forceInWorld,const Vector3& pointInWorldSpace);
 		void addForceAtBodyPoint(const Vector3& forceInWorld, const Vector3& pointInBodySpace);
-		Vector3 transformWorldPointToLocalSpace(const Vector3& point_in_world) const ;
-		Vector3 transformLocalPointToWorldSpace(const Vector3& local_point) const ;
-		Vector3 transformWorldVectorToLocalSpace(const Vector3& vec) const;
-		Vector3 transformLocalVectorToWorldSpace(const Vector3& vec) const;
+		virtual Vector3 transformWorldPointToLocalSpace(const Vector3& point_in_world) const ;
+		virtual Vector3 transformLocalPointToWorldSpace(const Vector3& local_point) const ;
+		virtual Vector3 transformWorldVectorToLocalSpace(const Vector3& vec) const;
+		virtual Vector3 transformLocalVectorToWorldSpace(const Vector3& vec) const;
 
 		bool hasFiniteMass() const;
 

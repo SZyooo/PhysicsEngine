@@ -39,3 +39,8 @@ const std::vector<unsigned int>& YoungEngine::Geometry::Shape::trianglatedIndice
 YoungEngine::Geometry::Shape::~Shape()
 {
 }
+
+int YoungEngine::Geometry::Shape::getIndicesCount() const
+{
+	return indices.size();
+}
