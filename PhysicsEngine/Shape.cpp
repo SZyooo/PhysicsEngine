@@ -13,7 +13,7 @@ glm::mat4& YoungEngine::Geometry::Shape::getTransformData()
 	return model;
 }
 YoungEngine::Geometry::Shape::Shape(const glm::mat4& m)
-	:model(m)
+	:model(m), model_inv(glm::inverse(m))
 {
 }
 void YoungEngine::Geometry::Shape::move(const glm::vec3& translate)
@@ -24,6 +24,11 @@ void YoungEngine::Geometry::Shape::move(const glm::vec3& translate)
 const glm::mat4& YoungEngine::Geometry::Shape::getTransform() const
 {
 	return model;
+}
+
+const glm::mat4& YoungEngine::Geometry::Shape::getTransformInv() const
+{
+	return model_inv;
 }
 
 const std::vector<YoungEngine::Geometry::Vertex>& YoungEngine::Geometry::Shape::getVertices()

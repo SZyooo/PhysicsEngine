@@ -49,10 +49,10 @@ int main() {
 	//GLuint defaultVao;
 	//glCreateVertexArrays(1, &defaultVao);
 
-	glm::mat4 model = glm::scale(glm::mat4(1), vec3(0.5));
+	glm::mat4 model = glm::scale(glm::mat4(1), vec3(1));
 	model = glm::translate(model, glm::vec3(1, 0, 0));
 	YoungEngine::ParticleWrapper cube(new YoungEngine::Geometry::Cube(model, 1, 1, 1));
-	YoungEngine::RigidBodyWrapper cubeBody(new YoungEngine::Geometry::Cube(model, 1, 1, 1));
+	YoungEngine::RigidBodyWrapper cubeBody(new YoungEngine::Geometry::Cube(model, 2, 2, 2));
 	cube.setMass(10);
 	cube.setDamping(0.9);
 	cubeBody.setAngularDamping(0.9);
@@ -67,11 +67,11 @@ int main() {
 	cubeBody.setInertiaTensor(inertiaTensor);
 	cubeBody.setLinearDamping(0.9);
 	cubeBody.setOrientation({ 0,1,0 }, 0);
-	cubeBody.move({2, 0, 0});
+	//cubeBody.move({2, 0, 0});
 	//cubeBody.setRotation({ 1,1,1 });
 
 	GLuint defaultDraw = create_program("default_vs.glsl", "default_fs.glsl");
-	GLuint cubeBuffer = YoungEngine::moveVertexToBuffer(cube.getVertices());
+	GLuint cubeBuffer = YoungEngine::moveVertexToBuffer(cubeBody.getVertices());
 	GLuint cubeVao = YoungEngine::generateVAOForDefaultShader(cubeBuffer);
 	glBindVertexArray(cubeVao);
 	glUseProgram(defaultDraw);
@@ -83,7 +83,8 @@ int main() {
 	YoungEngine::ParticleAnchoredSpring anchoredSpring({ 0,0,0 }, 100, 0.1);
 	YoungEngine::ParticleGravity gravity({ 0,-10,0 });
 	YoungEngine::ParticleBuoyancy buoyancy(0.5, 0.5 * 0.5 * 0.5, 0, 1000, {0,1,0});
-	YoungEngine::AnchoredBungee bungee({ 0,0,0 }, { 0.5,0.5,0.5 }, 0.2, 100);
+	YoungEngine::Vector3 connPos = {1,1,1};
+	YoungEngine::AnchoredBungee bungee({ 0,0,0 }, connPos, 0.2, 100);
 	YoungEngine::Gravity rigidGravity({ 0,-10,0 });
 
 	GLuint drawSpring = create_program("line_vs.glsl", "line_fs.glsl");
@@ -115,9 +116,10 @@ int main() {
 	//YoungEngine::PrintVector(u * a + v * b + w * c);
 
 	//YoungEngine::Geometry::Sphere sphere(16, 1);
-	glm::mat4 rot = glm::rotate(glm::mat4(1.f), glm::radians(-90.f), glm::vec3(1, 0, 0));
-	YoungEngine::RigidBodyWrapper sphere(new YoungEngine::Geometry::Sphere(16, 1, rot));
-	sphere.setRotation({ 0, 1, 0 });//rotate around y-axis
+	glm::mat4 sm = glm::rotate(glm::mat4(1.f), glm::radians(-90.f), glm::vec3(2, 0, 0));
+	sm = glm::scale(sm, glm::vec3(0.1));
+	YoungEngine::RigidBodyWrapper sphere(new YoungEngine::Geometry::Sphere(16, 1, sm));
+	//sphere.setRotation({ 0, 1, 0 });//rotate around y-axis
 	GLuint sphereVao = YoungEngine::generateVAOForDefaultShader(YoungEngine::moveVertexToBuffer(sphere.getVertices()));
 	
 	int w, h,nc;
@@ -129,7 +131,7 @@ int main() {
 	glTextureSubImage2D(earth_tex, 0, 0, 0, w, h, GL_RGB, GL_UNSIGNED_BYTE, img);
 	stbi_image_free(img);
 	glBindTextureUnit(0, earth_tex);
-
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	while (glfwWindowShouldClose(window) == false)
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -138,7 +140,7 @@ int main() {
 		double dt = t - time;
 		cc.SetUpDeltaTime(dt);
 		time = t;
-		float slowedDt = dt * 0.01;
+		float slowedDt = dt*1;
 		//anchoredSpring.updateForce(cube, dt);
 		//buoyancy.updateForce(cube, dt);
 		//gravity.updateForce(cube, dt);
@@ -150,7 +152,7 @@ int main() {
 		cubeBody.integrate(slowedDt);
 		sphere.integrate(dt);
 
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		
 
 		glUseProgram(defaultDraw);
 		glBindVertexArray(cubeVao);
@@ -164,7 +166,7 @@ int main() {
 		glDrawElements(GL_TRIANGLES, sphere.getIndicesCount(), GL_UNSIGNED_INT, &sphere.trianglatedIndices()[0]);
 
 		glUseProgram(drawSpring);
-		YoungEngine::Vector3 cnn = cubeBody.transformLocalPointToWorldSpace({ 0.5,0.5,0.5 });
+		YoungEngine::Vector3 cnn = cubeBody.transformLocalPointToWorldSpace(connPos);
 		glm::vec3 particle_pos = YoungEngine::convertVector3ToGLMVec3(cnn);
 		glUniform3fv(glGetUniformLocation(drawSpring, "pos[1]"), 1, glm::value_ptr(particle_pos));
 		glUniformMatrix4fv(glGetUniformLocation(drawSpring, "view"), 1, GL_FALSE, glm::value_ptr(camera.GetViewMat()));

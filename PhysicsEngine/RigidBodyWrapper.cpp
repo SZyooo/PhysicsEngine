@@ -26,6 +26,11 @@ const glm::mat4& YoungEngine::RigidBodyWrapper::getTransform() const
 	return transform;
 }
 
+YoungEngine::Vector3 YoungEngine::RigidBodyWrapper::getPosition() const
+{
+	return transformLocalPointToWorldSpace({ 0,0,0 });
+}
+
 const std::vector<YoungEngine::Geometry::Vertex>& YoungEngine::RigidBodyWrapper::getVertices()
 {
 	return shape->getVertices();
@@ -50,12 +55,12 @@ YoungEngine::Vector3 YoungEngine::RigidBodyWrapper::transformWorldPointToLocalSp
 {
 	Vector3 toRigidBodySpace = RigidBody::transformWorldPointToLocalSpace(point_in_world);
 	glm::vec4 v = glm::vec4(toRigidBodySpace.x, toRigidBodySpace.y, toRigidBodySpace.z, 1);
-	glm::mat4 toModel;
-	glm::mat4 shape_model = shape->getTransform();
-	toModel[0] = glm::vec4(shape_model[0].x, shape_model[1].x, shape_model[2].x, 0);
-	toModel[1] = glm::vec4(shape_model[0].y, shape_model[1].y, shape_model[2].y, 0);
-	toModel[2] = glm::vec4(shape_model[0].z, shape_model[1].z, shape_model[2].z, 0);
-	toModel[3] = glm::vec4(-shape_model[3].x, -shape_model[3].y, -shape_model[3].y, 1);
+	glm::mat4 toModel = shape->getTransformInv();
+	//glm::mat4 shape_model = shape->getTransform();
+	//toModel[0] = glm::vec4(shape_model[0].x, shape_model[1].x, shape_model[2].x, 0);
+	//toModel[1] = glm::vec4(shape_model[0].y, shape_model[1].y, shape_model[2].y, 0);
+	//toModel[2] = glm::vec4(shape_model[0].z, shape_model[1].z, shape_model[2].z, 0);
+	//toModel[3] = glm::vec4(-shape_model[3].x, -shape_model[3].y, -shape_model[3].y, 1);
 	glm::vec4 res = toModel * v;
 	return {res.x,res.y,res.z};
 }
@@ -71,19 +76,14 @@ YoungEngine::Vector3 YoungEngine::RigidBodyWrapper::transformWorldVectorToLocalS
 {
 	Vector3 toRigidBodySpace = RigidBody::transformWorldVectorToLocalSpace(vec);
 	glm::vec4 v = glm::vec4(toRigidBodySpace.x, toRigidBodySpace.y, toRigidBodySpace.z, 0);
-	glm::mat4 toModel;
-	glm::mat4 shape_model = shape->getTransform();
-	toModel[0] = glm::vec4(shape_model[0].x, shape_model[1].x, shape_model[2].x, 0);
-	toModel[1] = glm::vec4(shape_model[0].y, shape_model[1].y, shape_model[2].y, 0);
-	toModel[2] = glm::vec4(shape_model[0].z, shape_model[1].z, shape_model[2].z, 0);
-	toModel[3] = glm::vec4(-shape_model[3].x, -shape_model[3].y, -shape_model[3].y, 1);
-	glm::vec4 res = toModel * v;
-	return { res.x,res.y,res.z };
+	glm::mat4 toModel = shape->getTransformInv();
+	v = toModel * v;
+	return { v.x,v.y,v.z };
 }
 
 YoungEngine::Vector3 YoungEngine::RigidBodyWrapper::transformLocalVectorToWorldSpace(const Vector3& vec) const
 {
 	glm::vec4 v(vec.x, vec.y, vec.z, 0);
 	v = shape->getTransform() * v;
-	return RigidBody::transformLocalPointToWorldSpace({ v.x,v.y,v.z });
+	return RigidBody::transformLocalVectorToWorldSpace({ v.x,v.y,v.z });
 }

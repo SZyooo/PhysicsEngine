@@ -35,7 +35,14 @@ YoungEngine::Geometry::Sphere::Sphere(int detailLv, float r, const glm::mat4& mo
 			double angleAlpha = alpha + alphaStep * j;
 			if (j == 0 && j == m)
 			{
-				angleAlpha = 0;
+				if (j == 0)
+				{
+					angleAlpha = 0;
+				}
+				else
+				{
+					angleAlpha = 2 * PI;
+				}
 			}
 			v.x = r * sin(angleTheta) * cos(angleAlpha);
 			v.y = r * sin(angleTheta) * sin(angleAlpha);
@@ -62,7 +69,7 @@ YoungEngine::Geometry::Sphere::Sphere(int detailLv, float r, const glm::mat4& mo
 		indices.push_back(i - 2 * detailLv);
 		indices.push_back(i + 1);
 	}
-	for (int i = 2; i <= detailLv; i++)
+	for (int i = 2; i < detailLv; i++)
 	{
 		for (int j = (i * (2*detailLv + 1) - 1), n = 0; n < 2*detailLv; j++, n++)
 		{
@@ -74,7 +81,8 @@ YoungEngine::Geometry::Sphere::Sphere(int detailLv, float r, const glm::mat4& mo
 			indices.push_back(j + 1);
 		}
 	}
-	for (int i = (detailLv * 2 * detailLv - 2), n = 0; n < 2*detailLv; i++, n++)
+	int num = (detailLv - 1) * (detailLv * 2 + 1) - 1;
+	for (int i = num, n = 0; n < 2 * detailLv; i++, n++)
 	{
 		indices.push_back(i + 2 * detailLv + 1);
 		indices.push_back(i);

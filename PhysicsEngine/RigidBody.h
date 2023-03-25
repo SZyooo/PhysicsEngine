@@ -15,6 +15,7 @@ namespace YoungEngine
 		Vector3 constantAcceleration;
 		glm::quat orientation;
 		glm::mat4 transform;
+		glm::mat4 transform_inv;
 		glm::mat3 inverseInertiaTensor;
 		glm::mat3 inverseInertiaTensorWorld;
 		
