@@ -59,13 +59,6 @@ void YoungEngine::RigidBody::addForceAtBodyPoint(const Vector3& forceInWorld, co
 
 YoungEngine::Vector3 YoungEngine::RigidBody::transformWorldVectorToLocalSpace(const Vector3& vec) const
 {
-	//glm::mat3 rot = glm::transpose(glm::mat3(transform));
-	//glm::mat4 tran;
-	//tran[0] = glm::vec4(rot[0].x, rot[0].y, rot[0].z, 0);
-	//tran[1] = glm::vec4(rot[1].x, rot[1].y, rot[1].z, 0);
-	//tran[2] = glm::vec4(rot[2].x, rot[2].y, rot[2].z, 0);
-	//tran[3] = glm::vec4(-transform[3].x, -transform[3].y, -transform[3].z, 1);
-	//glm::vec4 res = tran * glm::vec4(vec.x, vec.y, vec.z, 0);
 	glm::vec4 res = transform_inv * glm::vec4(vec.x, vec.y, vec.z, 0);
 	return Vector3(res.x, res.y, res.z);
 }
@@ -79,12 +72,6 @@ YoungEngine::Vector3 YoungEngine::RigidBody::transformLocalVectorToWorldSpace(co
 
 YoungEngine::Vector3 YoungEngine::RigidBody::transformWorldPointToLocalSpace(const Vector3& point_in_world) const
 {
-	//glm::mat3 rot = glm::transpose(glm::mat3(transform));
-	//glm::mat4 tran;
-	//tran[0] = glm::vec4(rot[0].x, rot[0].y, rot[0].z, 0);
-	//tran[1] = glm::vec4(rot[1].x, rot[1].y, rot[1].z, 0);
-	//tran[2] = glm::vec4(rot[2].x, rot[2].y, rot[2].z, 0);
-	//tran[3] = glm::vec4(-transform[3].x,-transform[3].y,-transform[3].z,1);
 	glm::vec4 res = transform_inv * glm::vec4(point_in_world.x, point_in_world.y, point_in_world.z,1);
 	return Vector3(res.x, res.y, res.z);
 }

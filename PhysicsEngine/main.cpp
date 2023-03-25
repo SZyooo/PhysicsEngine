@@ -55,7 +55,7 @@ int main() {
 	YoungEngine::RigidBodyWrapper cubeBody(new YoungEngine::Geometry::Cube(model, 2, 2, 2));
 	cube.setMass(10);
 	cube.setDamping(0.9);
-	cubeBody.setAngularDamping(0.9);
+	cubeBody.setAngularDamping(0.5);
 	float _1_12 = 1.f / 12;
 	float cubeBodyMass = 100;
 	float dxdx = 0.25, dydy = 0.25, dzdz = 0.25;
