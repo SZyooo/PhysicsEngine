@@ -4,6 +4,10 @@
 YoungEngine::Geometry::Sphere::Sphere(int detailLv, float r, const glm::mat4& model)
 	:Shape(model)
 {
+	if (detailLv < 5)
+	{
+		detailLv = 5;
+	}
 	std::vector<Vertex>& vertices = getVerticesData();
 
 	long double PI = 3.14159265358979323846;

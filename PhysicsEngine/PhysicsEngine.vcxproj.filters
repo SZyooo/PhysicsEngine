@@ -99,16 +99,28 @@
     <ClCompile Include="Shape.cpp">
       <Filter>源文件\Geometries</Filter>
     </ClCompile>
-    <ClCompile Include="Vec2D.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Vec3D.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Sphere.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Vertex.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Plane.cpp">
+      <Filter>源文件\Geometries</Filter>
+    </ClCompile>
+    <ClCompile Include="Vec2D.cpp">
+      <Filter>源文件\Geometries</Filter>
+    </ClCompile>
+    <ClCompile Include="Vec3D.cpp">
+      <Filter>源文件\Geometries</Filter>
+    </ClCompile>
+    <ClCompile Include="ToolFuncs.cpp">
+      <Filter>源文件\Geometries</Filter>
+    </ClCompile>
+    <ClCompile Include="Polygon.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="VerticesCloud.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -198,6 +210,18 @@
       <Filter>头文件\Geometries</Filter>
     </ClInclude>
     <ClInclude Include="Sphere.h">
+      <Filter>头文件\Geometries</Filter>
+    </ClInclude>
+    <ClInclude Include="Plane.h">
+      <Filter>头文件\Geometries</Filter>
+    </ClInclude>
+    <ClInclude Include="ToolFuncs.h">
+      <Filter>头文件\Geometries</Filter>
+    </ClInclude>
+    <ClInclude Include="Polygon.h">
+      <Filter>头文件\Geometries</Filter>
+    </ClInclude>
+    <ClInclude Include="VerticesCloud.h">
       <Filter>头文件\Geometries</Filter>
     </ClInclude>
   </ItemGroup>

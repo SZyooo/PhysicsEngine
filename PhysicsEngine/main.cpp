@@ -14,6 +14,11 @@
 #include "Geometry.h"
 #include "Point.h"
 #include "Sphere.h"
+#include "ToolFuncs.h"
+#include "Polygon.h"
+#include "Vec3D.h"
+#include "VerticesCloud.h"
+#include <random>
 
 //#define STB_IMAGE_IMPLEMENTATION
 #include<stb_image.h>
@@ -122,6 +127,21 @@ int main() {
 	//sphere.setRotation({ 0, 1, 0 });//rotate around y-axis
 	GLuint sphereVao = YoungEngine::generateVAOForDefaultShader(YoungEngine::moveVertexToBuffer(sphere.getVertices()));
 	
+	std::vector<YoungEngine::Geometry::Vec3D> polygonVertices;
+	std::uniform_real_distribution<float> u(-5,5);
+	std::default_random_engine e;
+	e.seed(std::time(0));
+	for (int i = 0; i < 100; i++)
+	{
+		polygonVertices.push_back({ u(e),u(e), 0 });
+	}
+	std::vector<YoungEngine::Geometry::Vec3D> polygon = YoungEngine::Geometry::buildConvexHull2D(polygonVertices, {1,0,0});
+	YoungEngine::Geometry::Polygon p(polygon);
+	GLuint polygonVao = YoungEngine::generateVAOForDefaultShader(YoungEngine::moveVertexToBuffer(p.getVertices()));
+	YoungEngine::Geometry::VerticesCloud cloud(polygonVertices);
+	GLuint cloudVao = YoungEngine::generateVAOForDefaultShader(YoungEngine::moveVertexToBuffer(cloud.getVertices()));
+
+
 	int w, h,nc;
 	stbi_set_flip_vertically_on_load(true);
 	unsigned char* img = stbi_load("D:/earth.jpg", &w, &h, &nc, 0);
@@ -158,12 +178,12 @@ int main() {
 		glBindVertexArray(cubeVao);
 		glUniformMatrix4fv(glGetUniformLocation(defaultDraw, "view"), 1, GL_FALSE, glm::value_ptr(camera.GetViewMat()));
 		glUniformMatrix4fv(glGetUniformLocation(defaultDraw, "model"), 1, GL_FALSE, glm::value_ptr(cubeBody.getTransform()));
-		glDrawElements(GL_TRIANGLES, cubeBody.getIndicesCount(), GL_UNSIGNED_INT, &cubeBody.trianglatedIndices()[0]);
+		//glDrawElements(GL_TRIANGLES, cubeBody.getIndicesCount(), GL_UNSIGNED_INT, &cubeBody.trianglatedIndices()[0]);
 
 		glBindVertexArray(sphereVao);
 		glUniformMatrix4fv(glGetUniformLocation(defaultDraw, "view"), 1, GL_FALSE, glm::value_ptr(camera.GetViewMat()));
 		glUniformMatrix4fv(glGetUniformLocation(defaultDraw, "model"), 1, GL_FALSE, glm::value_ptr(sphere.getTransform()));
-		glDrawElements(GL_TRIANGLES, sphere.getIndicesCount(), GL_UNSIGNED_INT, &sphere.trianglatedIndices()[0]);
+		//glDrawElements(GL_TRIANGLES, sphere.getIndicesCount(), GL_UNSIGNED_INT, &sphere.trianglatedIndices()[0]);
 
 		glUseProgram(drawSpring);
 		YoungEngine::Vector3 cnn = cubeBody.transformLocalPointToWorldSpace(connPos);
@@ -171,7 +191,19 @@ int main() {
 		glUniform3fv(glGetUniformLocation(drawSpring, "pos[1]"), 1, glm::value_ptr(particle_pos));
 		glUniformMatrix4fv(glGetUniformLocation(drawSpring, "view"), 1, GL_FALSE, glm::value_ptr(camera.GetViewMat()));
 		glLineWidth(2);
-		glDrawArrays(GL_LINES, 0, 2);
+		//glDrawArrays(GL_LINES, 0, 2);
+
+		glUseProgram(defaultDraw);
+		glBindVertexArray(cloudVao);
+		glUniformMatrix4fv(glGetUniformLocation(defaultDraw, "view"), 1, GL_FALSE, glm::value_ptr(camera.GetViewMat()));
+		glUniformMatrix4fv(glGetUniformLocation(defaultDraw, "model"), 1, GL_FALSE, glm::value_ptr(cloud.getTransform()));
+		glPointSize(5);
+		glDrawElements(GL_POINTS, cloud.getIndicesCount(), GL_UNSIGNED_INT, &cloud.trianglatedIndices()[0]);
+		glBindVertexArray(polygonVao);
+		glUniformMatrix4fv(glGetUniformLocation(defaultDraw, "view"), 1, GL_FALSE, glm::value_ptr(camera.GetViewMat()));
+		glUniformMatrix4fv(glGetUniformLocation(defaultDraw, "model"), 1, GL_FALSE, glm::value_ptr(p.getTransform()));
+		glDrawElements(GL_LINE_LOOP, p.getIndicesCount(), GL_UNSIGNED_INT, &p.trianglatedIndices()[0]);
+
 		YoungEngine::drawBasis({ 0,0,0 }, camera.GetViewMat(), camera.GetProjectMat());
 		glfwSwapBuffers(window);
 		glfwPollEvents();
