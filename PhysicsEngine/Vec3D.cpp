@@ -25,6 +25,26 @@ bool YoungEngine::Geometry::Vec3D::operator==(const Vec3D& v)const
 	return false;
 }
 
+YoungEngine::Geometry::Vec3D YoungEngine::Geometry::Vec3D::operator*(float v) const
+{
+	return Vec3D(x * v, y * v, z * v);
+}
+
+bool YoungEngine::Geometry::Vec3D::all() const
+{
+	return x && y && z;
+}
+
+YoungEngine::Geometry::Vec3D YoungEngine::Geometry::Vec3D::less(const Vec3D& v) const
+{
+	return Vec3D(x < v.x, y < v.y, z < v.z);
+}
+
+YoungEngine::Geometry::Vec3D YoungEngine::Geometry::Vec3D::greater(const Vec3D& v) const
+{
+	return Vec3D(x > v.x, y > v.y, z > v.z);
+}
+
 
 YoungEngine::Geometry::Vec3D YoungEngine::Geometry::Vec3D::normalize() const
 {
@@ -52,4 +72,10 @@ YoungEngine::Geometry::Vec3D YoungEngine::Geometry::Vec3D::cross(const Vec3D& v3
 float YoungEngine::Geometry::Vec3D::dot(const Vec3D& v) const
 {
 	return x * v.x + y * v.y + z * v.z;
+}
+
+
+YoungEngine::Geometry::Vec3D YoungEngine::Geometry::operator*(float val, const Vec3D& vec)
+{
+	return Vec3D(vec.x * val, vec.y * val, vec.z * val);
 }

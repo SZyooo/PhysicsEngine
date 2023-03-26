@@ -16,6 +16,11 @@ namespace YoungEngine::Geometry
 
 		Vec3D operator-(const Vec3D& v)const;
 		bool operator==(const Vec3D& v)const;
+		Vec3D operator*(float v) const;
+		friend Vec3D operator*(float val, const Vec3D& vec);
+		bool all()const;
+		Vec3D less(const Vec3D& v) const;
+		Vec3D greater(const Vec3D& v) const;
 	private:
 		float padding = 1;
 	};

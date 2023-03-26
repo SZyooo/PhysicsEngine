@@ -34,15 +34,52 @@ namespace YoungEngine::Geometry
 		};
 		std::sort(vertices.begin(),vertices.end(),cmp);
 		float EPSILON = 0.00005;
-		//avoid zero vector
-		if (vertices[0] == Vec3D(0, 0, 0))
+		//removing leading zero vectors
+		int start = 0;
+		Vec3D zero{ 0,0,0 };
+		bool hasZero = false;
+		while (start < vertices.size() && vertices[start] == zero)
 		{
-			vertices[0] = Vec3D(EPSILON, EPSILON, EPSILON);
+			start++;
+			hasZero = true;
 		}
+		if (hasZero)
+		{
+			//all are zero vectors
+			if (start == vertices.size() - 1)
+			{
+				return { vertices[0] };
+			}
+			if (vertices[start + 1].x < EPSILON)
+			{
+				vertices[start].x = vertices[start + 1].x * 0.5;
+			}
+			else {
+				vertices[start].x = EPSILON;
+			}
+			if (vertices[start + 1].y < EPSILON)
+			{
+				vertices[start].y = vertices[start + 1].y * 0.5;
+			}
+			else
+			{
+				vertices[start].y = EPSILON;
+			}
+			if (vertices[start + 1].z < EPSILON)
+			{
+				vertices[start].z = vertices[start + 1].z * 0.5;
+			}
+			else
+			{
+				vertices[start].z = EPSILON;
+			}
+		}
+
+
 		std::stack<Vec3D> stk;
 		Vec3D ref = vertices[0].cross(axis);
 		//upper
-		for (int i = 0; i < vertices.size(); i++)
+		for (int i = start; i < vertices.size(); i++)
 		{
 			if (stk.size() < 2)
 			{
@@ -82,7 +119,7 @@ namespace YoungEngine::Geometry
 			stk.pop();
 		}
 		//bottom
-		for (int i = 0; i < vertices.size(); i++)
+		for (int i = start; i < vertices.size(); i++)
 		{
 			if (stk.size() < 2)
 			{

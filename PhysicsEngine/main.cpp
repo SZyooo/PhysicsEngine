@@ -129,7 +129,8 @@ int main() {
 	
 	std::vector<YoungEngine::Geometry::Vec3D> polygonVertices;
 	polygonVertices.push_back({ 0,0,0 });
-	std::uniform_real_distribution<float> u(-2,2);
+	polygonVertices.push_back({ 0.001,0.0005,0.00004 });
+	std::uniform_real_distribution<float> u(-0.00005, 0.00005);
 	std::default_random_engine e;
 	e.seed(std::time(0));
 	for (int i = 0; i < 100; i++)
@@ -140,9 +141,9 @@ int main() {
 	{ {-1,1},{0,0},{1,2},{2,1},{3,2},{4,1},{1,-1},{2,-2},{3,0} };
 	YoungEngine::Geometry::buildConvexHull2D(testSet, { 1,0,0 });
 	std::vector<YoungEngine::Geometry::Vec3D> polygon = YoungEngine::Geometry::buildConvexHull2D(polygonVertices, {1,0,0});
-	YoungEngine::Geometry::Polygon p(polygon);
+	YoungEngine::Geometry::Polygon p(polygon, glm::scale(glm::mat4(1), glm::vec3(1000)));
 	GLuint polygonVao = YoungEngine::generateVAOForDefaultShader(YoungEngine::moveVertexToBuffer(p.getVertices()));
-	YoungEngine::Geometry::VerticesCloud cloud(polygonVertices);
+	YoungEngine::Geometry::VerticesCloud cloud(polygonVertices,glm::scale(glm::mat4(1),glm::vec3(1000)));
 	GLuint cloudVao = YoungEngine::generateVAOForDefaultShader(YoungEngine::moveVertexToBuffer(cloud.getVertices()));
 
 
