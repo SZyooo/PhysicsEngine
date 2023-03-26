@@ -128,13 +128,17 @@ int main() {
 	GLuint sphereVao = YoungEngine::generateVAOForDefaultShader(YoungEngine::moveVertexToBuffer(sphere.getVertices()));
 	
 	std::vector<YoungEngine::Geometry::Vec3D> polygonVertices;
-	std::uniform_real_distribution<float> u(-5,5);
+	polygonVertices.push_back({ 0,0,0 });
+	std::uniform_real_distribution<float> u(-2,2);
 	std::default_random_engine e;
 	e.seed(std::time(0));
 	for (int i = 0; i < 100; i++)
 	{
 		polygonVertices.push_back({ u(e),u(e), 0 });
 	}
+	std::vector<YoungEngine::Geometry::Vec3D> testSet =
+	{ {-1,1},{0,0},{1,2},{2,1},{3,2},{4,1},{1,-1},{2,-2},{3,0} };
+	YoungEngine::Geometry::buildConvexHull2D(testSet, { 1,0,0 });
 	std::vector<YoungEngine::Geometry::Vec3D> polygon = YoungEngine::Geometry::buildConvexHull2D(polygonVertices, {1,0,0});
 	YoungEngine::Geometry::Polygon p(polygon);
 	GLuint polygonVao = YoungEngine::generateVAOForDefaultShader(YoungEngine::moveVertexToBuffer(p.getVertices()));

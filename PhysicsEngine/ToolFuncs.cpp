@@ -23,24 +23,57 @@ namespace YoungEngine::Geometry
 		{
 			return {};
 		}
+		if (vertices.size() < 3)
+		{
+			return {};
+		}
 		std::vector<Vec3D> res;
 		std::function<bool(const Vec3D&, const Vec3D&)> cmp = [&axis](const Vec3D& v1, const Vec3D& v2)->bool
 		{
-			return v1.dot(axis) <= v2.dot(axis);
+			return v1.dot(axis) < v2.dot(axis);
 		};
 		std::sort(vertices.begin(),vertices.end(),cmp);
-		std::stack<Vec3D> stk;
-		//upper
-		Vec3D ref = vertices[0].cross(axis);
-		stk.push(vertices[0]);
-		for (int i = 1; i < vertices.size(); i++)
+		float EPSILON = 0.00005;
+		//avoid zero vector
+		if (vertices[0] == Vec3D(0, 0, 0))
 		{
-			Vec3D dis = vertices[i].cross(stk.top());
-			while (stk.size() > 1 && dis.dot(ref) > 0)
+			vertices[0] = Vec3D(EPSILON, EPSILON, EPSILON);
+		}
+		std::stack<Vec3D> stk;
+		Vec3D ref = vertices[0].cross(axis);
+		//upper
+		for (int i = 0; i < vertices.size(); i++)
+		{
+			if (stk.size() < 2)
 			{
-				stk.pop();
-				dis = vertices[i].cross(stk.top());
+				stk.push(vertices[i]);
+				continue;
 			}
+			Vec3D top = stk.top();
+			stk.pop();
+			Vec3D second = stk.top();
+			stk.pop();
+			Vec3D v1 = top - second;
+			Vec3D v2 = vertices[i] - top;
+			bool addSecond = true;
+			while ((v1.cross(v2)).dot(ref) < 0)
+			{
+				top = second;
+				if (stk.size() == 0)
+				{
+					addSecond = false;
+					break;
+				}
+				second = stk.top();
+				v1 = top - second;
+				v2 = vertices[i] - top;
+				stk.pop();
+			}
+			if (addSecond)
+			{
+				stk.push(second);
+			}
+			stk.push(top);
 			stk.push(vertices[i]);
 		}
 		while (stk.empty() == false)
@@ -49,15 +82,38 @@ namespace YoungEngine::Geometry
 			stk.pop();
 		}
 		//bottom
-		stk.push(vertices[0]);
-		for (int i = 1; i < vertices.size(); i++)
+		for (int i = 0; i < vertices.size(); i++)
 		{
-			Vec3D dis = vertices[i].cross(stk.top());
-			while (stk.size() > 1 && dis.dot(ref) < 0)
+			if (stk.size() < 2)
 			{
-				stk.pop();
-				dis = vertices[i].cross(stk.top());
+				stk.push(vertices[i]);
+				continue;
 			}
+			Vec3D top = stk.top();
+			stk.pop();
+			Vec3D second = stk.top();
+			stk.pop();
+			Vec3D v1 = top - second;
+			Vec3D v2 = vertices[i] - top;
+			bool addSecond = true;
+			while ((v1.cross(v2)).dot(ref) > 0)
+			{
+				top = second;
+				if (stk.size() == 0)
+				{
+					addSecond = false;
+					break;
+				}
+				second = stk.top();
+				v1 = top - second;
+				v2 = vertices[i] - top;
+				stk.pop();
+			}
+			if (addSecond)
+			{
+				stk.push(second);
+			}
+			stk.push(top);
 			stk.push(vertices[i]);
 		}
 		stk.pop();
@@ -75,4 +131,5 @@ namespace YoungEngine::Geometry
 		}
 		return res;
 	}
+
 }
