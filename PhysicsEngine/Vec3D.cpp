@@ -15,6 +15,16 @@ YoungEngine::Geometry::Vec3D YoungEngine::Geometry::Vec3D::operator-(const Vec3D
 {
 	return Vec3D(x - v.x, y - v.y, z - v.z);
 }
+YoungEngine::Geometry::Vec3D YoungEngine::Geometry::Vec3D::operator+(const Vec3D& v) const
+{
+	return Vec3D(x + v.x, y + v.y, z + v.z);
+}
+void YoungEngine::Geometry::Vec3D::operator+=(const Vec3D& v)
+{
+	x += v.x;
+	y += v.y;
+	z += v.z;
+}
 bool YoungEngine::Geometry::Vec3D::operator==(const Vec3D& v)const 
 {
 	double d = (v - *this).squaredMagnitude();
@@ -35,6 +45,11 @@ bool YoungEngine::Geometry::Vec3D::all() const
 	return x && y && z;
 }
 
+bool YoungEngine::Geometry::Vec3D::any() const
+{
+	return x || y || z;
+}
+
 YoungEngine::Geometry::Vec3D YoungEngine::Geometry::Vec3D::less(const Vec3D& v) const
 {
 	return Vec3D(x < v.x, y < v.y, z < v.z);
@@ -43,6 +58,15 @@ YoungEngine::Geometry::Vec3D YoungEngine::Geometry::Vec3D::less(const Vec3D& v) 
 YoungEngine::Geometry::Vec3D YoungEngine::Geometry::Vec3D::greater(const Vec3D& v) const
 {
 	return Vec3D(x > v.x, y > v.y, z > v.z);
+}
+
+YoungEngine::Geometry::Vec3D YoungEngine::Geometry::Vec3D::equalTo(const Vec3D& v, float tolerance)
+{
+	return Vec3D(
+	fabs(x - v.x) <= tolerance,
+	fabs(y - v.y) <= tolerance,
+	fabs(z - v.z) <= tolerance
+	);
 }
 
 

@@ -122,28 +122,32 @@ int main() {
 
 	//YoungEngine::Geometry::Sphere sphere(16, 1);
 	glm::mat4 sm = glm::rotate(glm::mat4(1.f), glm::radians(-90.f), glm::vec3(2, 0, 0));
-	sm = glm::scale(sm, glm::vec3(0.1));
+	sm = glm::scale(sm, glm::vec3(1));
 	YoungEngine::RigidBodyWrapper sphere(new YoungEngine::Geometry::Sphere(16, 1, sm));
-	//sphere.setRotation({ 0, 1, 0 });//rotate around y-axis
+	sphere.setRotation({ 0, 1, 0 });//rotate around y-axis
 	GLuint sphereVao = YoungEngine::generateVAOForDefaultShader(YoungEngine::moveVertexToBuffer(sphere.getVertices()));
 	
 	std::vector<YoungEngine::Geometry::Vec3D> polygonVertices;
-	polygonVertices.push_back({ 0,0,0 });
-	polygonVertices.push_back({ 0.001,0.0005,0.00004 });
-	std::uniform_real_distribution<float> u(-0.00005, 0.00005);
+	//polygonVertices.push_back({ 0,0,0 });
+	//polygonVertices.push_back({ 0.001,0.0005,0.00004 });
+	std::uniform_real_distribution<float> u(-1, 1);
 	std::default_random_engine e;
 	e.seed(std::time(0));
 	for (int i = 0; i < 100; i++)
 	{
-		polygonVertices.push_back({ u(e),u(e), 0 });
+		// 3x + 4y + z = 4;
+		float x = u(e);
+		float y = u(e);
+		polygonVertices.push_back({ x,y, 4 - 3 * x - 4 * y });
 	}
 	std::vector<YoungEngine::Geometry::Vec3D> testSet =
 	{ {-1,1},{0,0},{1,2},{2,1},{3,2},{4,1},{1,-1},{2,-2},{3,0} };
 	YoungEngine::Geometry::buildConvexHull2D(testSet, { 1,0,0 });
-	std::vector<YoungEngine::Geometry::Vec3D> polygon = YoungEngine::Geometry::buildConvexHull2D(polygonVertices, {1,0,0});
-	YoungEngine::Geometry::Polygon p(polygon, glm::scale(glm::mat4(1), glm::vec3(1000)));
+	YoungEngine::Geometry::Plane plane{ {3,4,1},4};
+	std::vector<YoungEngine::Geometry::Vec3D> polygon = YoungEngine::Geometry::quickHull2D(polygonVertices, plane);
+	YoungEngine::Geometry::Polygon p(polygon);
 	GLuint polygonVao = YoungEngine::generateVAOForDefaultShader(YoungEngine::moveVertexToBuffer(p.getVertices()));
-	YoungEngine::Geometry::VerticesCloud cloud(polygonVertices,glm::scale(glm::mat4(1),glm::vec3(1000)));
+	YoungEngine::Geometry::VerticesCloud cloud(polygonVertices);
 	GLuint cloudVao = YoungEngine::generateVAOForDefaultShader(YoungEngine::moveVertexToBuffer(cloud.getVertices()));
 
 
@@ -156,7 +160,11 @@ int main() {
 	glTextureSubImage2D(earth_tex, 0, 0, 0, w, h, GL_RGB, GL_UNSIGNED_BYTE, img);
 	stbi_image_free(img);
 	glBindTextureUnit(0, earth_tex);
+
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+
+
 	while (glfwWindowShouldClose(window) == false)
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -183,12 +191,12 @@ int main() {
 		glBindVertexArray(cubeVao);
 		glUniformMatrix4fv(glGetUniformLocation(defaultDraw, "view"), 1, GL_FALSE, glm::value_ptr(camera.GetViewMat()));
 		glUniformMatrix4fv(glGetUniformLocation(defaultDraw, "model"), 1, GL_FALSE, glm::value_ptr(cubeBody.getTransform()));
-		//glDrawElements(GL_TRIANGLES, cubeBody.getIndicesCount(), GL_UNSIGNED_INT, &cubeBody.trianglatedIndices()[0]);
+		glDrawElements(GL_TRIANGLES, cubeBody.getIndicesCount(), GL_UNSIGNED_INT, &cubeBody.trianglatedIndices()[0]);
 
 		glBindVertexArray(sphereVao);
 		glUniformMatrix4fv(glGetUniformLocation(defaultDraw, "view"), 1, GL_FALSE, glm::value_ptr(camera.GetViewMat()));
 		glUniformMatrix4fv(glGetUniformLocation(defaultDraw, "model"), 1, GL_FALSE, glm::value_ptr(sphere.getTransform()));
-		//glDrawElements(GL_TRIANGLES, sphere.getIndicesCount(), GL_UNSIGNED_INT, &sphere.trianglatedIndices()[0]);
+		glDrawElements(GL_TRIANGLES, sphere.getIndicesCount(), GL_UNSIGNED_INT, &sphere.trianglatedIndices()[0]);
 
 		glUseProgram(drawSpring);
 		YoungEngine::Vector3 cnn = cubeBody.transformLocalPointToWorldSpace(connPos);
@@ -196,7 +204,7 @@ int main() {
 		glUniform3fv(glGetUniformLocation(drawSpring, "pos[1]"), 1, glm::value_ptr(particle_pos));
 		glUniformMatrix4fv(glGetUniformLocation(drawSpring, "view"), 1, GL_FALSE, glm::value_ptr(camera.GetViewMat()));
 		glLineWidth(2);
-		//glDrawArrays(GL_LINES, 0, 2);
+		glDrawArrays(GL_LINES, 0, 2);
 
 		glUseProgram(defaultDraw);
 		glBindVertexArray(cloudVao);

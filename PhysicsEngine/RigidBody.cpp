@@ -4,7 +4,7 @@
 void YoungEngine::RigidBody::calculateDerivedData()
 {
 	orientation = glm::normalize(orientation);
-	glm::mat3 m(orientation);
+	glm::mat3 m= glm::mat3_cast(orientation);
 	//transform[0] = glm::vec4(m[0].x, m[0].y, m[0].z, 0);
 	//transform[1] = glm::vec4(m[1].x, m[1].y, m[1].z, 0);
 	//transform[2] = glm::vec4(m[2].x, m[2].y, m[2].z, 0);

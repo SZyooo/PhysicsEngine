@@ -1,5 +1,8 @@
 #pragma once
 #include<vector>
+#include<glm/glm.hpp>
+#include<list>
+#include "Plane.h"
 namespace YoungEngine::Geometry
 {
 	class Vec3D;
@@ -15,4 +18,17 @@ namespace YoungEngine::Geometry
 	/// see['Another Efficient Algorithm for Convex HUlls in Two Dimensions.' Information Processing Letters, Vol.9, no.5, pp.216-219,1979.]
 	/// </summary>
 	std::vector<Vec3D> buildConvexHull2D(std::vector<Vec3D> vertices, Vec3D axis );
+	/// <summary>
+	/// build a 2D convex hull using quick hull algorithm. 
+	/// </summary>
+	/// <param name="vertices"></param>
+	/// <param name="model">:plane is where the convex hull is generated</param>
+	/// <returns>:resultant convex hull</returns>
+	std::vector<Vec3D> quickHull2D(std::vector<Vec3D> vertices, Plane p);
+	/// <summary>
+	/// test whether a vertex is within a convex polygon. MAKE SURE THEY ARE ALL IN ONE PLANE AND verts FORM A POLYGON IN ORDER
+	/// if the vertices' count is less then 3 in which situation no polygon can be formed the function will return false
+	/// </summary>
+	bool testVertexInConvexPolygon2D(const Vec3D& vertex, const std::vector<Vec3D>& verts);
+	bool testVertexInConvexPolygon2D(const Vec3D& vertex, const std::list<Vec3D>& verts);
 };

@@ -19,6 +19,12 @@
     <Filter Include="源文件\Geometries">
       <UniqueIdentifier>{528f0be0-2a1e-41c2-a182-7e646d66500f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\Model">
+      <UniqueIdentifier>{3ae43d72-25da-4154-b3ee-b8e9c0ea772f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Model">
+      <UniqueIdentifier>{4db8d85a-5411-4d51-a969-92f1862b28b4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -123,6 +129,18 @@
     <ClCompile Include="VerticesCloud.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>源文件\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>源文件\Model</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math.h">
@@ -222,6 +240,18 @@
       <Filter>头文件\Geometries</Filter>
     </ClInclude>
     <ClInclude Include="VerticesCloud.h">
+      <Filter>头文件\Geometries</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>头文件\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>头文件\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>头文件\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
       <Filter>头文件\Geometries</Filter>
     </ClInclude>
   </ItemGroup>
