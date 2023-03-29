@@ -230,6 +230,9 @@
     <None Include="default_vs.glsl" />
     <None Include="line_fs.glsl" />
     <None Include="line_vs.glsl" />
+    <None Include="obj_fs.glsl" />
+    <None Include="obj_vs.glsl" />
+    <None Include="person_fs.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

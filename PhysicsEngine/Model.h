@@ -23,10 +23,21 @@ namespace YoungEngine::Model
 		void processNode(const aiScene* scene, aiNode* node);
 		void processMesh(const aiScene*, aiMesh* mesh);
 		void processMaterial(const aiMaterial* mat, Mesh& mesh);
+		std::string model_path;
+		void load();
 	public:
 		Model(const char* file);
-
+		Model(const Model& m);
+		Model& operator=(const Model& m);
+		Model(Model&& m) noexcept;
+		Model& operator=(Model&& m) noexcept;
 		glm::mat4 getTransform() const;
-		void draw(unsigned int vao, unsigned int program);
+		void draw(unsigned int program);
+
+		void translate(const Geometry::Vec3D& move);
+		void rotate(const Geometry::Vec3D& eularAngle, Geometry::Transform::ROTATEORDER order);
+		void rotate(const glm::quat& q);
+		void scale(const Geometry::Vec3D& scale);
+		~Model();
 	};
 };

@@ -5,25 +5,85 @@
 #include <assimp/Importer.hpp>
 #include "Vec3D.h"
 #include "Vertex.h"
+#include "Debug.h"
 namespace YoungEngine::Model
 {
 
-	inline glm::mat4 YoungEngine::Model::Model::getTransform() const
+	glm::mat4 Model::getTransform() const
 	{
 		return transform.getTransformMatrix();
 	}
-	void Model::draw(unsigned int vao, unsigned int program)
+	void Model::draw(unsigned int program)
 	{
 		for (auto& mesh : meshs)
 		{
-			mesh.draw(vao, program);
+			mesh.draw(program);
 		}
 	}
-	Model::Model(const char* file)
+	void Model::translate(const Geometry::Vec3D& move)
 	{
-		Assimp::Importer importer = Assimp::Importer();
-		const aiScene* scene = importer.ReadFile(file, aiProcess_GenNormals | aiProcess_Triangulate | aiProcess_FlipUVs);
-		processNode(scene, scene->mRootNode);
+		transform.translate(move);
+	}
+	void Model::rotate(const Geometry::Vec3D& eularAngle, Geometry::Transform::ROTATEORDER order)
+	{
+		transform.rotate(eularAngle, order);
+	}
+	void Model::rotate(const glm::quat& q)
+	{
+		transform.rotate(q);
+	}
+	void Model::scale(const Geometry::Vec3D& s)
+	{
+		transform.scale(s);
+	}
+	Model::Model(const char* file)
+		:model_path(file)
+	{
+		size_t idx= std::string::npos;
+		while ((idx = model_path.find("\\")) != std::string::npos)
+		{
+			model_path.replace(idx, 1, "/");
+		}
+		load();
+	}
+
+	Model::Model(const Model& m)
+		:model_path(m.model_path)
+	{
+		size_t idx = std::string::npos;
+		while (idx = model_path.find("\\") != std::string::npos)
+		{
+			model_path.replace(idx, idx + 2, "/");
+		}
+		load();
+	}
+
+	Model& Model::operator=(const Model& m)
+	{
+		model_path = m.model_path;
+		load();
+		return *this;
+	}
+
+	Model::Model(Model&& m)noexcept
+	{
+		meshs.swap(m.meshs);
+		diffuses.swap(m.diffuses);
+		speculars.swap(m.speculars);
+		ambients.swap(m.ambients);
+		transform = m.transform;
+		model_path = m.model_path;
+	}
+
+	Model& Model::operator=(Model&& m)noexcept
+	{
+		meshs.swap(m.meshs);
+		diffuses.swap(m.diffuses);
+		speculars.swap(m.speculars);
+		ambients.swap(m.ambients);
+		transform = m.transform;
+		model_path = m.model_path;
+		return *this;
 	}
 
 	void Model::processNode(const aiScene* scene, aiNode* node)
@@ -60,9 +120,9 @@ namespace YoungEngine::Model
 			}
 			else
 			{
-				auto uv = mesh->mTextureCoords[0];
-				U = uv->x;
-				V = uv->y;
+				auto uv = mesh->mTextureCoords[0][i];
+				U = uv.x;
+				V = uv.y;
 			}
 			Geometry::Vertex vert;
 			vert.position = vertex;
@@ -93,16 +153,23 @@ namespace YoungEngine::Model
 		int diffuseCount = mat->GetTextureCount(aiTextureType_DIFFUSE);
 		int ambientCount = mat->GetTextureCount(aiTextureType_AMBIENT);
 		int specularCount = mat->GetTextureCount(aiTextureType_SPECULAR);
+		int baseCount = mat->GetTextureCount(aiTextureType_BASE_COLOR);
 		for (int j = 0; j < diffuseCount; j++)
 		{
 			aiString path;
 			mat->GetTexture(aiTextureType_DIFFUSE, j, &path);
 			std::string stdstr(path.C_Str());
+			if (stdstr[0] != '/')
+			{
+				stdstr.insert(0, "/");
+			}
+			size_t x= model_path.find_last_of('/');
+			stdstr = model_path.substr(0, x) + stdstr;
 			if (diffuses.find(stdstr) == diffuses.end())
 			{
 				diffuses.emplace(std::make_pair(stdstr, Texture(stdstr, Texture::TextureType::DIFFUSE)));
 			}
-			diff.push_back(ambients[stdstr].textureID());
+			diff.push_back(diffuses[stdstr].textureID());
 		}
 		for (int j = 0; j < ambientCount; j++)
 		{
@@ -129,5 +196,33 @@ namespace YoungEngine::Model
 		mesh.setAmbients(ambt);
 		mesh.setDiffuses(diff);
 		mesh.setSpeuclars(spec);
+	}
+	void Model::load()
+	{
+		Assimp::Importer importer = Assimp::Importer();
+		const aiScene* scene = importer.ReadFile(model_path.c_str(),aiProcess_GenNormals | aiProcess_Triangulate);
+		if (scene == nullptr)
+		{
+			std::string error = std::string("load") + model_path + "failed";
+			PrintInfo(error);
+			return;
+		}
+		processNode(scene, scene->mRootNode);
+	}
+	Model::~Model()
+	{
+		PrintFloat(1.f);
+		for (auto& diff : diffuses)
+		{
+			diff.second.free();
+		}
+		for (auto& spec : speculars)
+		{
+			spec.second.free();
+		}
+		for (auto& ambient : ambients)
+		{
+			ambient.second.free();
+		}
 	}
 };

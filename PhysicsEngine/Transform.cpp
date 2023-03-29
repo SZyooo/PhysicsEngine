@@ -4,7 +4,7 @@
 namespace YoungEngine::Geometry
 {
 	Transform::Transform()
-		:position({ 0,0,0 }), q(1,0,0,0)
+		:position({ 0,0,0 }), q(1,0,0,0), _scale({1,1,1})
 	{
 	}
 	Vec3D Transform::getPosition() const
@@ -26,13 +26,10 @@ namespace YoungEngine::Geometry
 	glm::mat4 Transform::getTransformMatrix() const
 	{
 		auto nq = glm::normalize(q);
-		glm::mat3 rot = glm::mat3_cast(nq);
-		glm::mat4 res;
-		res[0] = { rot[0],0 };
-		res[1] = { rot[1],0 };
-		res[2] = { rot[2],0 };
-		res[3] = { position.x,position.y,position.z,1 };
-		return res;
+		glm::mat4 rot = glm::mat4_cast(nq);
+		glm::mat4 move = glm::mat4({ 1,0,0,0 }, { 0,1,0,0 }, { 0,0,1,0 }, { position.x,position.y,position.z,1 });
+		glm::mat4 scaleMat = { {_scale.x,0,0,0},{0,_scale.y,0,0},{0,0,_scale.z,0},{0,0,0,1} };
+		return move * rot * scaleMat;
 	}
 	void Transform::translate(const Vec3D& move)
 	{
@@ -76,6 +73,10 @@ namespace YoungEngine::Geometry
 	void Transform::rotate(const glm::quat& Q)
 	{
 		this->q = Q * this->q;
+	}
+	void Transform::scale(const Vec3D& s)
+	{
+		_scale = s;
 	}
 }
 

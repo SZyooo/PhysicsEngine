@@ -7,6 +7,19 @@ YoungEngine::Model::Texture::Texture(Texture&& t)noexcept
 	t.id = 0;
 	t.valid = false;
 }
+YoungEngine::Model::Texture& YoungEngine::Model::Texture::operator=(Texture&& t)
+{
+	path = t.path;
+	id = t.id;
+	type = t.type;
+	wid = t.wid;
+	hei = t.hei;
+	level = t.level;
+	valid = true;
+	t.id = 0;
+	t.valid = false;
+	return *this;
+}
 YoungEngine::Model::Texture::Texture(const std::string& path, TextureType type, GLenum specifiedInternalFormat, GLenum specifiedFormat, int level)
 	:path(path),type(type),level(level),valid(true)
 {

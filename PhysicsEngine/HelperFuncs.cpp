@@ -56,3 +56,9 @@ void YoungEngine::drawBasis(const glm::vec3& pos, const glm::mat4& view, const g
     glLineWidth(1);
 }
 
+void YoungEngine::setMat4(unsigned int program, const glm::mat4& mat, std::string name)
+{
+    glUseProgram(program);
+    glUniformMatrix4fv(glGetUniformLocation(program, name.c_str()), 1, GL_FALSE, glm::value_ptr(mat));
+}
+

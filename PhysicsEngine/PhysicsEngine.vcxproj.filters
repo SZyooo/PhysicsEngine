@@ -132,13 +132,13 @@
     <ClCompile Include="Texture.cpp">
       <Filter>源文件\Model</Filter>
     </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Transform.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Model.cpp">
+      <Filter>源文件\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
       <Filter>源文件\Model</Filter>
     </ClCompile>
   </ItemGroup>
@@ -286,6 +286,15 @@
       <Filter>资源文件</Filter>
     </None>
     <None Include="default_fs.glsl">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="obj_vs.glsl">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="obj_fs.glsl">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="person_fs.glsl">
       <Filter>资源文件</Filter>
     </None>
   </ItemGroup>

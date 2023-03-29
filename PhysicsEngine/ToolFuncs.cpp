@@ -290,7 +290,7 @@ namespace YoungEngine::Geometry
 			//degenerated, choose another two vertex randomly
 			else
 			{
-				if (tackleDegeneratedSituation(left, up) == false)
+				if (tackleDegeneratedSituation(left, right) == false)
 				{
 					return {};
 				}
@@ -309,7 +309,7 @@ namespace YoungEngine::Geometry
 			}
 			else
 			{
-				if (tackleDegeneratedSituation(left, up) == false)
+				if (tackleDegeneratedSituation(left, right) == false)
 				{
 					return {};
 				}

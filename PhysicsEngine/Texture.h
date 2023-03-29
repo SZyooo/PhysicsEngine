@@ -23,6 +23,7 @@ namespace YoungEngine::Model
 		Texture& operator=(const Texture& t) = delete;
 		Texture(const Texture& t) = delete;
 		Texture(Texture&& t)noexcept;
+		Texture& operator=(Texture&& t);
 		Texture(const std::string& path, TextureType type,GLenum specifiedInternalFormat = 0,GLenum specifiedFormat = 0, int level = 1);
 		unsigned int textureID() const;
 		TextureType textureType() const;

@@ -55,10 +55,10 @@ int main() {
 	//GLuint defaultVao;
 	//glCreateVertexArrays(1, &defaultVao);
 
-	glm::mat4 model = glm::scale(glm::mat4(1), vec3(1));
-	model = glm::translate(model, glm::vec3(1, 0, 0));
-	YoungEngine::ParticleWrapper cube(new YoungEngine::Geometry::Cube(model, 1, 1, 1));
-	YoungEngine::RigidBodyWrapper cubeBody(new YoungEngine::Geometry::Cube(model, 2, 2, 2));
+	glm::mat4 modelMat = glm::scale(glm::mat4(1), vec3(1));
+	modelMat = glm::translate(modelMat, glm::vec3(1, 0, 0));
+	YoungEngine::ParticleWrapper cube(new YoungEngine::Geometry::Cube(modelMat, 1, 1, 1));
+	YoungEngine::RigidBodyWrapper cubeBody(new YoungEngine::Geometry::Cube(modelMat, 2, 2, 2));
 	cube.setMass(10);
 	cube.setDamping(0.9);
 	cubeBody.setAngularDamping(0.5);
@@ -160,12 +160,21 @@ int main() {
 	glTextureStorage2D(earth_tex, 1, GL_RGB32F, w, h);
 	glTextureSubImage2D(earth_tex, 0, 0, 0, w, h, GL_RGB, GL_UNSIGNED_BYTE, img);
 	stbi_image_free(img);
-	glBindTextureUnit(0, earth_tex);
+	
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-	YoungEngine::Model::Model m("D:\\C++projects\\Resource\\3Dmodels\\m\\0.obj");
+	YoungEngine::Model::Model loadedObj("D:\\C++projects\\Resource\\3Dmodels\\0\\0.obj");
+	loadedObj.translate({ 5,0,0 });
+	GLuint objShader = create_program("obj_vs.glsl", "obj_fs.glsl");
+	YoungEngine::setMat4(objShader, camera.GetProjectMat(), "proj");
 
+	YoungEngine::Model::Model person("D:/C++projects/Resource/3Dmodels/1680101857559/scene.gltf");
+	GLuint personShader = create_program("obj_vs.glsl", "person_fs.glsl");
+	YoungEngine::setMat4(personShader, camera.GetProjectMat(), "proj");
+	person.translate({ -5,0,1 });
+	person.scale({ 0.1,0.1,0.1 });
+	person.rotate({ glm::radians(-90.f),0,0 }, YoungEngine::Geometry::Transform::ROTATEORDER::XYZ);
 	while (glfwWindowShouldClose(window) == false)
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -187,7 +196,7 @@ int main() {
 		sphere.integrate(dt);
 
 		
-
+		glBindTextureUnit(0, earth_tex);
 		glUseProgram(defaultDraw);
 		glBindVertexArray(cubeVao);
 		glUniformMatrix4fv(glGetUniformLocation(defaultDraw, "view"), 1, GL_FALSE, glm::value_ptr(camera.GetViewMat()));
@@ -217,6 +226,15 @@ int main() {
 		glUniformMatrix4fv(glGetUniformLocation(defaultDraw, "view"), 1, GL_FALSE, glm::value_ptr(camera.GetViewMat()));
 		glUniformMatrix4fv(glGetUniformLocation(defaultDraw, "model"), 1, GL_FALSE, glm::value_ptr(p.getTransform()));
 		glDrawElements(GL_LINE_LOOP, p.getIndicesCount(), GL_UNSIGNED_INT, &p.trianglatedIndices()[0]);
+
+		YoungEngine::setMat4(objShader, camera.GetViewMat(), "view");
+		YoungEngine::setMat4(objShader, loadedObj.getTransform(), "model");
+		loadedObj.draw(objShader);
+
+		
+		YoungEngine::setMat4(personShader, camera.GetViewMat(), "view");
+		YoungEngine::setMat4(personShader, person.getTransform(), "model");
+		person.draw(personShader);
 
 		YoungEngine::drawBasis({ 0,0,0 }, camera.GetViewMat(), camera.GetProjectMat());
 		glfwSwapBuffers(window);

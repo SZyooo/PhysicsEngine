@@ -6,6 +6,7 @@ namespace YoungEngine::Geometry
 	class Transform
 	{
 		Vec3D position;
+		Vec3D _scale;
 		glm::quat q;
 	public:
 		Transform();
@@ -26,5 +27,6 @@ namespace YoungEngine::Geometry
 		void translate(const Vec3D& move);
 		void rotate(const Vec3D& eularAngle, ROTATEORDER order);
 		void rotate(const glm::quat& q);
+		void scale(const Vec3D& scale);
 	};
 };
