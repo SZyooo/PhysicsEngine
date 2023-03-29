@@ -6,7 +6,12 @@ namespace YoungEngine::Model
 	
 	class Texture
 	{
-		enum class TextureType;
+	public:
+		enum class TextureType
+		{
+			DIFFUSE, SPECULAR, AMBIENT
+		};
+	private:
 		std::string path;
 		unsigned int id;
 		TextureType type;
@@ -14,14 +19,11 @@ namespace YoungEngine::Model
 		int level;
 		bool valid;
 	public:
-		enum class TextureType
-		{
-			DIFFUSE, SPECULAR, AMBIENT
-		};
+		Texture() {};
 		Texture& operator=(const Texture& t) = delete;
 		Texture(const Texture& t) = delete;
-		Texture(Texture&& t) = delete;
-		Texture(std::string& path, TextureType type,GLenum specifiedInternalFormat = 0,GLenum specifiedFormat = 0, int level = 1);
+		Texture(Texture&& t)noexcept;
+		Texture(const std::string& path, TextureType type,GLenum specifiedInternalFormat = 0,GLenum specifiedFormat = 0, int level = 1);
 		unsigned int textureID() const;
 		TextureType textureType() const;
 		std::string texturePath()const;

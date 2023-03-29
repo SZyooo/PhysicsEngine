@@ -1,7 +1,13 @@
 #include "Texture.h"
 #include <stb_image.h>
 #include <GL/glew.h>
-YoungEngine::Model::Texture::Texture(std::string& path, TextureType type, GLenum specifiedInternalFormat, GLenum specifiedFormat, int level)
+YoungEngine::Model::Texture::Texture(Texture&& t)noexcept
+	:path(t.path), id(t.id), type(t.type), wid(t.wid), hei(t.hei), level(t.level), valid(true)
+{
+	t.id = 0;
+	t.valid = false;
+}
+YoungEngine::Model::Texture::Texture(const std::string& path, TextureType type, GLenum specifiedInternalFormat, GLenum specifiedFormat, int level)
 	:path(path),type(type),level(level),valid(true)
 {
 	
@@ -42,6 +48,7 @@ YoungEngine::Model::Texture::Texture(std::string& path, TextureType type, GLenum
 	stbi_image_free(img);
 	glGenerateTextureMipmap(id);
 }
+
 
 unsigned int YoungEngine::Model::Texture::textureID() const
 {

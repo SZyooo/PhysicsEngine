@@ -19,6 +19,7 @@
 #include "Vec3D.h"
 #include "VerticesCloud.h"
 #include <random>
+#include "Model.h"
 
 //#define STB_IMAGE_IMPLEMENTATION
 #include<stb_image.h>
@@ -163,7 +164,7 @@ int main() {
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-
+	YoungEngine::Model::Model m("D:\\C++projects\\Resource\\3Dmodels\\m\\0.obj");
 
 	while (glfwWindowShouldClose(window) == false)
 	{
