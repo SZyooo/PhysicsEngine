@@ -1,6 +1,7 @@
 #include "Texture.h"
 #include <stb_image.h>
 #include <GL/glew.h>
+#include "Debug.h"
 YoungEngine::Model::Texture::Texture(Texture&& t)noexcept
 	:path(t.path), id(t.id), type(t.type), wid(t.wid), hei(t.hei), level(t.level), valid(true)
 {
@@ -27,6 +28,12 @@ YoungEngine::Model::Texture::Texture(const std::string& path, TextureType type, 
 	int channel;
 	stbi_set_flip_vertically_on_load(true);
 	unsigned char* img = stbi_load(path.c_str(), &wid, &hei, &channel, 0);
+	if (img == nullptr)
+	{
+		std::string error = path + " loading fails.";
+		PrintInfo(error);
+		return;
+	}
 	glCreateTextures(GL_TEXTURE_2D, 1, &id);
 	GLenum internalformat;
 	GLenum format;

@@ -20,8 +20,8 @@ namespace YoungEngine::Model
 		std::map<std::string, Texture> speculars;
 		std::map<std::string, Texture> ambients;
 		YoungEngine::Geometry::Transform transform;
-		void processNode(const aiScene* scene, aiNode* node);
-		void processMesh(const aiScene*, aiMesh* mesh);
+		void processNode(const aiScene* scene, aiNode* node,const glm::mat4& parentTransform);
+		void processMesh(const aiScene*, aiMesh* mesh,const glm::mat4& parentTransform);
 		void processMaterial(const aiMaterial* mat, Mesh& mesh);
 		std::string model_path;
 		void load();
@@ -33,7 +33,7 @@ namespace YoungEngine::Model
 		Model& operator=(Model&& m) noexcept;
 		glm::mat4 getTransform() const;
 		void draw(unsigned int program);
-
+		void drawNorm(const unsigned int program);
 		void translate(const Geometry::Vec3D& move);
 		void rotate(const Geometry::Vec3D& eularAngle, Geometry::Transform::ROTATEORDER order);
 		void rotate(const glm::quat& q);

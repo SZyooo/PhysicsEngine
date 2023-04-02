@@ -20,6 +20,13 @@ namespace YoungEngine::Model
 			mesh.draw(program);
 		}
 	}
+	void Model::drawNorm(const unsigned int program)
+	{
+		for (auto& mesh : meshs)
+		{
+			mesh.drawNorm(program);
+		}
+	}
 	void Model::translate(const Geometry::Vec3D& move)
 	{
 		transform.translate(move);
@@ -85,23 +92,33 @@ namespace YoungEngine::Model
 		model_path = m.model_path;
 		return *this;
 	}
-
-	void Model::processNode(const aiScene* scene, aiNode* node)
+	glm::mat4 fromAiMatrix44(const aiMatrix4x4t<float>& m)
 	{
+		glm::mat4 res;
+		res[0] = { m.a1,m.a2,m.a3,m.a4 };
+		res[1] = { m.b1,m.b2,m.b3,m.b4 };
+		res[2] = { m.c1,m.c2,m.c3,m.c4 };
+		res[3] = { m.d1,m.d2,m.d3,m.d4 };
+		return glm::transpose(res);
+	}
+	void Model::processNode(const aiScene* scene, aiNode* node, const glm::mat4& parentTransform)
+	{
+		glm::mat4 selfTransform = fromAiMatrix44(node->mTransformation);
+		glm::mat4 toChild = parentTransform * selfTransform;
 		for (int i = 0; i < node->mNumMeshes; i++)
 		{
-			processMesh(scene,scene->mMeshes[node->mMeshes[i]]);
+			processMesh(scene,scene->mMeshes[node->mMeshes[i]], toChild);
 		}
 		for (int i = 0; i < node->mNumChildren; i++)
 		{
-			processNode(scene, node->mChildren[i]);
+			processNode(scene, node->mChildren[i], toChild);
 		}
 	}
 	Geometry::Vec3D fromaiVector3D(const aiVector3D& v)
 	{
 		return { v.x,v.y,v.z };
 	}
-	void Model::processMesh(const aiScene* scene, aiMesh* mesh){
+	void Model::processMesh(const aiScene* scene, aiMesh* mesh,const glm::mat4& trans){
 		std::vector<YoungEngine::Geometry::Vertex> vertices;
 		std::vector<unsigned int> indices;
 		std::string name;
@@ -110,8 +127,11 @@ namespace YoungEngine::Model
 			auto v = mesh->mVertices[i];
 			auto n = mesh->mNormals[i];
 			name = mesh->mName.C_Str();
-			Geometry::Vec3D vertex = fromaiVector3D(v);
-			Geometry::Vec3D norm = fromaiVector3D(n);
+			glm::vec4 vertex = { v.x, v.y, v.z, 1 };
+			vertex = trans * vertex;
+			//Geometry::Vec3D norm = fromaiVector3D(n);
+			glm::vec4 norm = { n.x,n.y,n.z,0 };
+			norm = glm::transpose(glm::inverse(trans)) * norm;
 			unsigned int UVchannel = mesh->GetNumUVChannels();
 			float U, V;
 			if (UVchannel == 0)
@@ -125,8 +145,8 @@ namespace YoungEngine::Model
 				V = uv.y;
 			}
 			Geometry::Vertex vert;
-			vert.position = vertex;
-			vert.norm = norm;
+			vert.position = {vertex.x,vertex.y,vertex.z};
+			vert.norm = {norm.x,norm.y,norm.z};
 			vert.u = U;
 			vert.v = V;
 			vertices.push_back(vert);
@@ -154,6 +174,7 @@ namespace YoungEngine::Model
 		int ambientCount = mat->GetTextureCount(aiTextureType_AMBIENT);
 		int specularCount = mat->GetTextureCount(aiTextureType_SPECULAR);
 		int baseCount = mat->GetTextureCount(aiTextureType_BASE_COLOR);
+		std::string model_local_path = model_path.substr(0, model_path.find_last_of('/'));
 		for (int j = 0; j < diffuseCount; j++)
 		{
 			aiString path;
@@ -163,8 +184,7 @@ namespace YoungEngine::Model
 			{
 				stdstr.insert(0, "/");
 			}
-			size_t x= model_path.find_last_of('/');
-			stdstr = model_path.substr(0, x) + stdstr;
+			stdstr = model_local_path + stdstr;
 			if (diffuses.find(stdstr) == diffuses.end())
 			{
 				diffuses.emplace(std::make_pair(stdstr, Texture(stdstr, Texture::TextureType::DIFFUSE)));
@@ -176,6 +196,7 @@ namespace YoungEngine::Model
 			aiString path;
 			mat->GetTexture(aiTextureType_AMBIENT, j, &path);
 			std::string stdstr(path.C_Str());
+			stdstr = model_local_path + stdstr;
 			if (ambients.find(stdstr) == ambients.end())
 			{
 				ambients.emplace(std::make_pair(stdstr, Texture(stdstr, Texture::TextureType::AMBIENT)));
@@ -187,6 +208,7 @@ namespace YoungEngine::Model
 			aiString path;
 			mat->GetTexture(aiTextureType_SPECULAR, j, &path);
 			std::string stdstr(path.C_Str());
+			stdstr = model_local_path + stdstr;
 			if (speculars.find(stdstr) == speculars.end())
 			{
 				speculars.emplace(std::make_pair(stdstr, Texture(stdstr, Texture::TextureType::SPECULAR)));
@@ -200,14 +222,14 @@ namespace YoungEngine::Model
 	void Model::load()
 	{
 		Assimp::Importer importer = Assimp::Importer();
-		const aiScene* scene = importer.ReadFile(model_path.c_str(),aiProcess_GenNormals | aiProcess_Triangulate);
+		const aiScene* scene = importer.ReadFile(model_path.c_str(),aiProcess_GenNormals);
 		if (scene == nullptr)
 		{
-			std::string error = std::string("load") + model_path + "failed";
+			std::string error = std::string("load ") + model_path + "failed";
 			PrintInfo(error);
 			return;
 		}
-		processNode(scene, scene->mRootNode);
+		processNode(scene, scene->mRootNode,glm::mat4(1));
 	}
 	Model::~Model()
 	{

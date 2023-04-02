@@ -230,6 +230,9 @@
     <None Include="default_vs.glsl" />
     <None Include="line_fs.glsl" />
     <None Include="line_vs.glsl" />
+    <None Include="norm_fs.glsl" />
+    <None Include="norm_gs.glsl" />
+    <None Include="norm_vs.glsl" />
     <None Include="obj_fs.glsl" />
     <None Include="obj_vs.glsl" />
     <None Include="person_fs.glsl" />

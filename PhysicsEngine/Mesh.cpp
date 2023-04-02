@@ -60,6 +60,13 @@ void YoungEngine::Model::Mesh::draw(unsigned int program)
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, &indices[0]);
 }
 
+void YoungEngine::Model::Mesh::drawNorm(const unsigned int program)
+{
+	glBindVertexArray(vao);
+	glUseProgram(program);
+	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, &indices[0]);
+}
+
 void YoungEngine::Model::Mesh::setDiffuses(const std::vector<unsigned int>& diffs)
 {
 	diffuses_texs = diffs;

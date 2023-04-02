@@ -297,5 +297,14 @@
     <None Include="person_fs.glsl">
       <Filter>资源文件</Filter>
     </None>
+    <None Include="norm_gs.glsl">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="norm_fs.glsl">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="norm_vs.glsl">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -24,6 +24,7 @@ namespace YoungEngine::Model
 		Mesh(Mesh&& m) noexcept;
 		Mesh& operator=(Mesh&& m)noexcept;
 		void draw(unsigned int program);
+		void drawNorm(const unsigned int program);
 		void setDiffuses(const std::vector<unsigned int>& diffs);
 		void setSpeuclars(const std::vector<unsigned int>& specs);
 		void setAmbients(const std::vector<unsigned int>& ambients);

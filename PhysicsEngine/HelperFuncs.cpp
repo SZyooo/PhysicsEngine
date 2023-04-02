@@ -62,3 +62,15 @@ void YoungEngine::setMat4(unsigned int program, const glm::mat4& mat, std::strin
     glUniformMatrix4fv(glGetUniformLocation(program, name.c_str()), 1, GL_FALSE, glm::value_ptr(mat));
 }
 
+void YoungEngine::setFloat(unsigned int program, const float v, std::string name)
+{
+    glUseProgram(program);
+    glUniform1f(glGetUniformLocation(program, name.c_str()), v);
+}
+
+void YoungEngine::setFloat3(unsigned int program, std::string name, const float* v)
+{
+    glUseProgram(program);
+    glUniform3fv(glGetUniformLocation(program, name.c_str()), 1, v);
+}
+

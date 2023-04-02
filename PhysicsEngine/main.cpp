@@ -45,7 +45,7 @@ int main() {
 	};
 	auto window = initGL(WIN_WID, WIN_HEI);
 
-	Camera camera(3, 5, WIN_WID, WIN_HEI, 0, -90, { 0,0,5 });
+	Camera camera(3,20, WIN_WID, WIN_HEI, 0, -90, { 0,0,5 });
 	CameraControllor cc;
 	cc.SetUpCamera(&camera);
 	cc.SetUpCentre(WIN_WID / 2, WIN_HEI / 2);
@@ -173,8 +173,21 @@ int main() {
 	GLuint personShader = create_program("obj_vs.glsl", "person_fs.glsl");
 	YoungEngine::setMat4(personShader, camera.GetProjectMat(), "proj");
 	person.translate({ -5,0,1 });
-	person.scale({ 0.1,0.1,0.1 });
-	person.rotate({ glm::radians(-90.f),0,0 }, YoungEngine::Geometry::Transform::ROTATEORDER::XYZ);
+	person.scale({ 0.02,0.02,0.02 });
+	person.rotate({0,glm::radians(-90.f),0 }, YoungEngine::Geometry::Transform::ROTATEORDER::XYZ);
+	
+
+	YoungEngine::Model::Model boxAndSphere("D:/C++projects/Resource/3Dmodels/hierarchy.dae");
+	//boxAndSphere.scale({ 2,1,1 });
+	boxAndSphere.translate({ 0,0,5 });
+
+
+	GLuint drawNormShader = create_program("norm_vs.glsl", "norm_fs.glsl", 0, 0, "norm_gs.glsl");
+	YoungEngine::setMat4(drawNormShader, camera.GetProjectMat(), "project");
+	YoungEngine::setFloat(drawNormShader, 0.2f, "len");
+	float normColor[] = { 1,0,1 };
+	YoungEngine::setFloat3(drawNormShader, "normColor", normColor);
+
 	while (glfwWindowShouldClose(window) == false)
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -230,11 +243,18 @@ int main() {
 		YoungEngine::setMat4(objShader, camera.GetViewMat(), "view");
 		YoungEngine::setMat4(objShader, loadedObj.getTransform(), "model");
 		loadedObj.draw(objShader);
+		YoungEngine::setMat4(objShader, boxAndSphere.getTransform(), "model");
+		boxAndSphere.draw(objShader);
+		YoungEngine::setMat4(drawNormShader, camera.GetViewMat(), "view");
+		YoungEngine::setMat4(drawNormShader, boxAndSphere.getTransform(), "model");
+		boxAndSphere.drawNorm(drawNormShader);
 
-		
+
+
 		YoungEngine::setMat4(personShader, camera.GetViewMat(), "view");
 		YoungEngine::setMat4(personShader, person.getTransform(), "model");
 		person.draw(personShader);
+
 
 		YoungEngine::drawBasis({ 0,0,0 }, camera.GetViewMat(), camera.GetProjectMat());
 		glfwSwapBuffers(window);

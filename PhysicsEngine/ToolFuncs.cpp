@@ -178,7 +178,7 @@ namespace YoungEngine::Geometry
 			return {};
 		}
 		std::list<Vec3D> vList;
-		std::list<Vec3D>::iterator left, right, up, bottom;
+		std::list<Vec3D>::iterator left=vList.end(), right= vList.end(), up= vList.end(), bottom= vList.end();
 		float l = std::numeric_limits<float>::max();
 		float r = std::numeric_limits<float>::lowest();
 		float u = std::numeric_limits<float>::lowest();
@@ -191,7 +191,6 @@ namespace YoungEngine::Geometry
 			auto& v = vertices[i];
 			Vec3D vec = v - ps[0];
 			glm::vec3 vert(vec.dot(v1),vec.dot(v2),0);
-			Vec3D test = vert.x * v1 + vert.y * v2 + ps[0];
 			auto end = vList.insert(vList.end(),Vec3D(vert.x,vert.y,vert.z));
 			if (vert.x < l)
 			{
@@ -219,11 +218,12 @@ namespace YoungEngine::Geometry
 		{
 			auto left = it1;
 			auto right = it2;
+			Vec3D axle = *right - *left;
 			resList.push_back(*left);
 			vList.erase(left);
 			resList.push_back(*right);
 			vList.erase(right);
-			Vec3D axle = *right - *left;
+			//a bug here that it1 and it2 have nonsense value
 			auto rb = resList.begin(); rb++;
 			auto lv = vList.end();
 			for (auto it = vList.begin(); it != vList.end(); it++)
